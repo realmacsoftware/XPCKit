@@ -25,3 +25,4 @@
 
 #import "XPCConnection.h"
 #import "XPCService.h"
+#import "XPCMessage.h"

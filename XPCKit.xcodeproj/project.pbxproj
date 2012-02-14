@@ -84,6 +84,11 @@
 		1EF4D9E3141C38D0007BEEC0 /* NSFileHandle+XPCParse.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EF4D9E0141C38D0007BEEC0 /* NSFileHandle+XPCParse.m */; };
 		1EF4D9E4141C38D0007BEEC0 /* NSFileHandle+XPCParse.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EF4D9E0141C38D0007BEEC0 /* NSFileHandle+XPCParse.m */; };
 		1EF4D9E7141C3EEE007BEEC0 /* TestService.entitlements in Resources */ = {isa = PBXBuildFile; fileRef = 1EF4D9E6141C3EEE007BEEC0 /* TestService.entitlements */; };
+		300687CA14EA62B2006E8070 /* XPCMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 300687C814EA62B2006E8070 /* XPCMessage.h */; };
+		300687CB14EA62B2006E8070 /* XPCMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 300687C814EA62B2006E8070 /* XPCMessage.h */; };
+		300687CC14EA62B2006E8070 /* XPCMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 300687C914EA62B2006E8070 /* XPCMessage.m */; };
+		300687CD14EA62B2006E8070 /* XPCMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 300687C914EA62B2006E8070 /* XPCMessage.m */; };
+		300687D014EA62B2006E8070 /* XPCMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 300687C914EA62B2006E8070 /* XPCMessage.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -199,6 +204,8 @@
 		1EF4D9E0141C38D0007BEEC0 /* NSFileHandle+XPCParse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSFileHandle+XPCParse.m"; sourceTree = "<group>"; };
 		1EF4D9E5141C3EA2007BEEC0 /* TestApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = TestApp.entitlements; sourceTree = "<group>"; };
 		1EF4D9E6141C3EEE007BEEC0 /* TestService.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = TestService.entitlements; sourceTree = "<group>"; };
+		300687C814EA62B2006E8070 /* XPCMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XPCMessage.h; sourceTree = "<group>"; };
+		300687C914EA62B2006E8070 /* XPCMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XPCMessage.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -297,6 +304,8 @@
 				1EEDD08713DD508C00D5AEC3 /* XPCConnection.m */,
 				1E5F84A613E10DB700234F31 /* XPCService.h */,
 				1E5F84A713E10DB700234F31 /* XPCService.m */,
+				300687C814EA62B2006E8070 /* XPCMessage.h */,
+				300687C914EA62B2006E8070 /* XPCMessage.m */,
 				1EEDD0EF13DEB96F00D5AEC3 /* XPCUUID.h */,
 				1EEDD0F013DEB97000D5AEC3 /* XPCUUID.m */,
 			);
@@ -420,6 +429,7 @@
 				1E5F84A913E10DB700234F31 /* XPCService.h in Headers */,
 				1EF4D9E2141C38D0007BEEC0 /* NSFileHandle+XPCParse.h in Headers */,
 				1EB022A6141D9F3700BCC1FB /* NSDate+XPCParse.h in Headers */,
+				300687CB14EA62B2006E8070 /* XPCMessage.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -441,6 +451,7 @@
 				1EF4D9E1141C38D0007BEEC0 /* NSFileHandle+XPCParse.h in Headers */,
 				1EEDD0F113DEB97000D5AEC3 /* XPCUUID.h in Headers */,
 				1EB022A5141D9F3700BCC1FB /* NSDate+XPCParse.h in Headers */,
+				300687CA14EA62B2006E8070 /* XPCMessage.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -546,6 +557,7 @@
 		1EEDD01F13DD485400D5AEC3 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastUpgradeCheck = 0420;
 				ORGANIZATIONNAME = Mustacheware;
 			};
 			buildConfigurationList = 1EEDD02213DD485400D5AEC3 /* Build configuration list for PBXProject "XPCKit" */;
@@ -641,6 +653,7 @@
 				1EEDD08D13DDC34800D5AEC3 /* NSDictionary+XPCParse.m in Sources */,
 				1EF4D9E4141C38D0007BEEC0 /* NSFileHandle+XPCParse.m in Sources */,
 				1EB022A8141D9F3700BCC1FB /* NSDate+XPCParse.m in Sources */,
+				300687CD14EA62B2006E8070 /* XPCMessage.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -652,6 +665,7 @@
 				1EEDD08E13DDC34800D5AEC3 /* NSDictionary+XPCParse.m in Sources */,
 				1EEDD09313DDC48800D5AEC3 /* NSNumber+XPCParse.m in Sources */,
 				1EEDD09B13DDC8A300D5AEC3 /* NSObject+XPCParse.m in Sources */,
+				300687D014EA62B2006E8070 /* XPCMessage.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -687,6 +701,7 @@
 				1EEDD0DF13DEA04900D5AEC3 /* NSDictionary+XPCParse.m in Sources */,
 				1EF4D9E3141C38D0007BEEC0 /* NSFileHandle+XPCParse.m in Sources */,
 				1EB022A7141D9F3700BCC1FB /* NSDate+XPCParse.m in Sources */,
+				300687CC14EA62B2006E8070 /* XPCMessage.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
