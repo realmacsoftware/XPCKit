@@ -2,7 +2,7 @@
 //  XPCConnection.h
 //  XPCKit
 //
-//  Created by Steve Streza on 7/25/11. Copyright 2011 XPCKit.
+//  Created by Steve Streza on 7/25/11. Copyright 2012 XPCKit.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -20,6 +20,8 @@
 #import <Foundation/Foundation.h>
 #import <dispatch/dispatch.h>
 #import "XPCTypes.h"
+
+#define XPC_DIRECT_REPLY_KEY @"__directReply"
 
 @interface XPCConnection : NSObject{
     xpc_connection_t _connection;
@@ -41,11 +43,15 @@
 @property (nonatomic, readonly) NSNumber *connectionProcessID;
 @property (nonatomic, readonly) NSString *connectionAuditSessionID;
 
--(void)sendMessage:(NSDictionary *)message;
+-(void)sendMessage:(XPCMessage *)message;
+-(void)sendMessage:(XPCMessage *)message withReply:(XPCReplyHandler)replyHandler;
 
 -(void)suspend;
 -(void)resume;
 
 // handling connections
 -(void)receiveConnection:(xpc_connection_t)connection;
+
+-(void)_sendLog:(NSString *)string;
+
 @end

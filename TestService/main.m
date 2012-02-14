@@ -25,37 +25,63 @@ int main(int argc, const char *argv[])
 {
 	[XPCService runServiceWithConnectionHandler:^(XPCConnection *connection){
 		[connection _sendLog:@"TestService received a connection"];
-		[connection setEventHandler:^(NSDictionary *message, XPCConnection *connection){
+		[connection setEventHandler:^(XPCMessage *message, XPCConnection *connection){
 			[connection _sendLog:[NSString stringWithFormat:@"TestService received a message! %@", message]];
-			if([[message objectForKey:@"operation"] isEqual:@"multiply"]){
-				NSArray *values = [message objectForKey:@"values"];
+            
+            // Treat direct-reply message differently
+            
+            NSNumber *directReply = [message objectForKey:XPC_DIRECT_REPLY_KEY];
+            
+            // Respond to a specific reply handler or generic event handler
+            
+            XPCMessage *reply = nil;
+            if (directReply && [directReply boolValue])
+            {
+                reply = [XPCMessage messageReplyForMessage:message];
+            } else {
+                reply = [XPCMessage message];
+            }
+                
+            if([[message objectForKey:@"operation"] isEqual:@"multiply"])
+            {
+                NSArray *values = [message objectForKey:@"values"];
+                
+                // calculate the product
+                double product = 1.0;
+                for(NSUInteger index=0; index < values.count; index++){
+                    product = product * [(NSNumber *)[values objectAtIndex:index] doubleValue];
+                }
+                [reply setObject:[NSNumber numberWithDouble:product] forKey:@"result"];
+            }
+            
+            
+            if([[message objectForKey:@"operation"] isEqual:@"read"])
+            {
+                NSString *path = [message objectForKey:@"path"];
+                NSData *data = [[NSFileManager defaultManager] contentsAtPath:path];
+                NSFileHandle *fileHandle = [NSFileHandle fileHandleForReadingAtPath:path];
+                
+//                [connection _sendLog:[NSString stringWithFormat:@"data %i bytes handle %@",data.length, fileHandle]];
+                
 
-				// calculate the product
-				double product = 1.0;
-				for(NSUInteger index=0; index < values.count; index++){
-					product = product * [(NSNumber *)[values objectAtIndex:index] doubleValue];
-				}
-			
-				[connection sendMessage:[NSDictionary dictionaryWithObject:[NSNumber numberWithDouble:product] forKey:@"result"]];
-			}
-			
-			if([[message objectForKey:@"operation"] isEqual:@"read"]){
-				NSString *path = [message objectForKey:@"path"];
-				NSData *data = [[NSFileManager defaultManager] contentsAtPath:path];
-				NSFileHandle *fileHandle = [NSFileHandle fileHandleForReadingAtPath:path];
-				
-//				[connection _sendLog:[NSString stringWithFormat:@"data %i bytes handle %@",data.length, fileHandle]];
-				
-				[connection sendMessage:[NSDictionary dictionaryWithObjectsAndKeys:
-										 data, @"data",
-										 fileHandle, @"fileHandle",
-										 nil]];
-			}
-			
-			if([[message objectForKey:@"operation"] isEqual:@"whatTimeIsIt"]){
-				[connection sendMessage:[NSDictionary dictionaryWithObject:[NSDate date] forKey:@"date"]];
-			}
+                [reply setObject:data forKey:@"data"];
+                [reply setObject:fileHandle forKey:@"fileHandle"];
+            }
+            
+            
+            if([[message objectForKey:@"operation"] isEqual:@"whatTimeIsIt"])
+            {
+                [reply setObject:[NSDate date] forKey:@"date"];
+            }
+            
+            
+            // Treat more operations here...
+            
+            
+            [connection sendMessage:reply];
+                
 		}];
+//        xpc_connection_resume(xpc_retain(connection.connection));
 	}];
 	
 	

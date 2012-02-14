@@ -29,57 +29,65 @@
 {
     // Insert code here to initialize your application
     mathConnection = [[XPCConnection alloc] initWithServiceName:@"com.mustacheware.TestService"];
-    mathConnection.eventHandler = ^(NSDictionary *message, XPCConnection *inConnection){
-		NSNumber *result = [message objectForKey:@"result"];
-		NSData *data = [message objectForKey:@"data"];
-		NSFileHandle *fileHandle = [message objectForKey:@"fileHandle"];
-		NSDate *date = [message objectForKey:@"date"];
-		if(result){
-			NSLog(@"We got a calculation result! %@", result);
-		}else if(data || fileHandle){
-			NSData *newData = [fileHandle readDataToEndOfFile];
-			NSLog(@"We got a file handle! Read %i bytes - %@", newData.length, fileHandle);
-		}else if(date){
-			NSLog(@"It is now %@", date);
-		}
-    };
+//    mathConnection.eventHandler = ^(NSDictionary *message, XPCConnection *inConnection){
+//		NSNumber *result = [message objectForKey:@"result"];
+//		NSData *data = [message objectForKey:@"data"];
+//		NSFileHandle *fileHandle = [message objectForKey:@"fileHandle"];
+//		NSDate *date = [message objectForKey:@"date"];
+//		if(result){
+//			NSLog(@"We got a calculation result! %@", result);
+//		}else if(data || fileHandle){
+//			NSData *newData = [fileHandle readDataToEndOfFile];
+//			NSLog(@"We got a file handle! Read %lu bytes - %@", newData.length, fileHandle);
+//		}else if(date){
+//			NSLog(@"It is now %@", date);
+//		}
+//    };
 	
 	readConnection = [[XPCConnection alloc] initWithServiceName:@"com.mustacheware.TestService"];
-    readConnection.eventHandler = ^(NSDictionary *message, XPCConnection *inConnection){
+    readConnection.eventHandler = ^(XPCMessage *message, XPCConnection *inConnection){
 		NSData *data = [message objectForKey:@"data"];
 		NSFileHandle *fileHandle = [message objectForKey:@"fileHandle"];
 		if(data || fileHandle){
 			NSData *newData = [fileHandle readDataToEndOfFile];
 			if(newData){
-				NSLog(@"We got maybe mapped data! %i bytes - Equal? %@", data.length, ([newData isEqualToData:data] ? @"YES" : @"NO"));
+				NSLog(@"We got maybe mapped data! %lu bytes - Equal? %@", data.length, ([newData isEqualToData:data] ? @"YES" : @"NO"));
 			}
-				NSLog(@"We got a file handle! Read %i bytes - %@", newData.length, fileHandle);
+				NSLog(@"We got a file handle! Read %lu bytes - %@", newData.length, fileHandle);
 		}
     };
 	
+	// Let XPC service multiply some numbers
+    
+	XPCMessage *multiplyData = 
+	[XPCMessage messageWithObjects:[NSArray arrayWithObjects:
+                                     @"multiply", [NSArray arrayWithObjects:
+                                                   [NSNumber numberWithInt:7],
+                                                   [NSNumber numberWithInt:6],
+                                                   [NSNumber numberWithDouble: 1.67], 
+                                                   nil], nil]
+                           forKeys:[NSArray arrayWithObjects:@"operation", @"values", nil]];
 	
-	NSDictionary *multiplyData = 
-	[NSDictionary dictionaryWithObjectsAndKeys: 
-	 @"multiply", @"operation",
-	 [NSArray arrayWithObjects:
-	  [NSNumber numberWithInt:7],
-	  [NSNumber numberWithInt:6],
-	  [NSNumber numberWithDouble: 1.67], 
-	  nil], @"values",
-	 nil];
-	
-	NSDictionary *readData = [NSDictionary dictionaryWithObjectsAndKeys:
-			@"read", @"operation",
-			@"/Users/syco/Library/Safari/Bookmarks.plist", @"path",
-			nil];
+    [mathConnection sendMessage:multiplyData withReply:^(XPCMessage *message) {
+		NSNumber *result = [message objectForKey:@"result"];
+        if (result) {
+            NSLog(@"I asked for multiplying and got back the following result: %@", result);
+        }
+    }];
+    
+	// Let XPC service ...
+    
+	XPCMessage *readData = 
+	[XPCMessage messageWithObjects:[NSArray arrayWithObjects:@"read", @"/Users/syco/Library/Safari/Bookmarks.plist", nil]
+                           forKeys:[NSArray arrayWithObjects:@"operation", @"path", nil]];
+    
 	NSData *loadedData = [[NSFileManager defaultManager] contentsAtPath:[readData objectForKey:@"path"]];
 	NSFileHandle *loadedHandle = [NSFileHandle  fileHandleForReadingAtPath:[readData objectForKey:@"path"]];
-	NSLog(@"Sandbox is %@ at path %@, got %i bytes and a file handle %@",((loadedData.length == 0 && loadedHandle == nil) ? @"working" : @"NOT working"), [readData objectForKey:@"path"], loadedData.length, loadedHandle);
-
-    [mathConnection sendMessage:multiplyData];
+	NSLog(@"Sandbox is %@ at path %@, got %lu bytes and a file handle %@",((loadedData.length == 0 && loadedHandle == nil) ? @"working" : @"NOT working"), [readData objectForKey:@"path"], loadedData.length, loadedHandle);
+    
 	[readConnection sendMessage:readData];
 	
-	[mathConnection sendMessage:[NSDictionary dictionaryWithObject:@"whatTimeIsIt" forKey:@"operation"]];
+//	[mathConnection sendMessage:[XPCMessage messageWithObject:@"whatTimeIsIt" forKey:@"operation"]];
 }
 
 @end

@@ -18,6 +18,7 @@
 //
 
 #import "XPCConnection.h"
+#import "XPCMessage.h"
 #import <xpc/xpc.h>
 #import "NSObject+XPCParse.h"
 #import "NSDictionary+XPCParse.h"
@@ -85,7 +86,7 @@
         }else if (object == XPC_ERROR_KEY_DESCRIPTION){
         }else if (object == XPC_ERROR_TERMINATION_IMMINENT){
         }else{
-            id message = [NSObject objectWithXPCObject: object];
+            XPCMessage *message = [XPCMessage messageWithMessage: object];
 			
 #if XPCSendLogMessages
 			if([message objectForKey:@"XPCDebugLog"]){
@@ -101,22 +102,33 @@
     });
 }
 
--(void)sendMessage:(NSDictionary *)aDictMessage{
-	dispatch_async(self.dispatchQueue, ^{
-		NSDictionary *dictMessage = aDictMessage;
-		if(![dictMessage isKindOfClass:[NSDictionary class]]){
-			dictMessage = [NSDictionary dictionaryWithObject:dictMessage forKey:@"contents"];
-		}
 
-		xpc_object_t message = NULL;
+-(void)sendMessage:(XPCMessage *)inMessage
+{
+    // TODO: former implementation wrapped code into a dispatch_async()
+    // Would we benefit from that here?
+    if (![inMessage isKindOfClass:[XPCMessage class]]) {
+        // TODO: setting an arbitrary key is probably not a good idea here
+        inMessage = [XPCMessage messageWithObject:inMessage forKey:@"contents"];
+    }
+    NSLog(@"Sending message %@", inMessage);
+    xpc_connection_send_message(_connection, inMessage.lowLevelMessage);
+}
 
-//		NSDate *date = [NSDate date];
-		message = [dictMessage newXPCObject];
-//		NSLog(@"Message encoding took %gs on average - %@", [[NSDate date] timeIntervalSinceDate:date], dictMessage);
+
+-(void)sendMessage:(XPCMessage *)inMessage withReply:(XPCReplyHandler)replyHandler
+{
+    // TODO: former implementation wrapped code into a dispatch_async()
+    // Would we benefit from that here?
     
-		xpc_connection_send_message(_connection, message);
-		xpc_release(message);
-	});
+    // Need to tell service's event handler that we want a direct reply
+    [inMessage setObject:[NSNumber numberWithBool:YES] forKey:XPC_DIRECT_REPLY_KEY];
+    
+    NSLog(@"Sending message %@", inMessage);
+    xpc_connection_send_message_with_reply(_connection, inMessage.lowLevelMessage, dispatch_get_main_queue(), ^(xpc_object_t inLowLevelReplyMessage) {
+        XPCMessage *replyMessage = [XPCMessage messageWithMessage:inLowLevelReplyMessage];
+        replyHandler(replyMessage);
+    });
 }
 
 -(NSString *)connectionName{
@@ -175,7 +187,7 @@
 
 -(void)_sendLog:(NSString *)string{
 #if XPCSendLogMessages
-	[self sendMessage:[NSDictionary dictionaryWithObject:string forKey:@"XPCDebugLog"]];
+	[self sendMessage:[XPCMessage messageWithObject:string forKey:@"XPCDebugLog"]];
 #endif
 }
 

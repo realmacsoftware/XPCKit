@@ -22,8 +22,10 @@
 #pragma mark Block-based callbacks
 
 @class XPCConnection;
-typedef void (^XPCEventHandler)(NSDictionary *, XPCConnection *);
+@class XPCMessage;
+typedef void (^XPCEventHandler)(XPCMessage *, XPCConnection *);
 typedef void (^XPCConnectionHandler)(XPCConnection *);
+typedef void (^XPCReplyHandler)(XPCMessage *);
 
 #pragma mark Notifications
 
