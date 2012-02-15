@@ -28,20 +28,8 @@ int main(int argc, const char *argv[])
 		[connection setEventHandler:^(XPCMessage *message, XPCConnection *connection){
 			[connection _sendLog:[NSString stringWithFormat:@"TestService received a message! %@", message]];
             
-            // Treat direct-reply message differently
+            XPCMessage *reply = [XPCMessage messageReplyForMessage:message];
             
-            NSNumber *directReply = [message objectForKey:XPC_DIRECT_REPLY_KEY];
-            
-            // Respond to a specific reply handler or generic event handler
-            
-            XPCMessage *reply = nil;
-            if (directReply && [directReply boolValue])
-            {
-                reply = [XPCMessage messageReplyForMessage:message];
-            } else {
-                reply = [XPCMessage message];
-            }
-                
             if([[message objectForKey:@"operation"] isEqual:@"multiply"])
             {
                 NSArray *values = [message objectForKey:@"values"];
@@ -62,7 +50,6 @@ int main(int argc, const char *argv[])
                 NSFileHandle *fileHandle = [NSFileHandle fileHandleForReadingAtPath:path];
                 
 //                [connection _sendLog:[NSString stringWithFormat:@"data %i bytes handle %@",data.length, fileHandle]];
-                
 
                 [reply setObject:data forKey:@"data"];
                 [reply setObject:fileHandle forKey:@"fileHandle"];

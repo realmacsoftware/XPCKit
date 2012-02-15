@@ -84,11 +84,16 @@
 		1EF4D9E3141C38D0007BEEC0 /* NSFileHandle+XPCParse.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EF4D9E0141C38D0007BEEC0 /* NSFileHandle+XPCParse.m */; };
 		1EF4D9E4141C38D0007BEEC0 /* NSFileHandle+XPCParse.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EF4D9E0141C38D0007BEEC0 /* NSFileHandle+XPCParse.m */; };
 		1EF4D9E7141C3EEE007BEEC0 /* TestService.entitlements in Resources */ = {isa = PBXBuildFile; fileRef = 1EF4D9E6141C3EEE007BEEC0 /* TestService.entitlements */; };
-		300687CA14EA62B2006E8070 /* XPCMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 300687C814EA62B2006E8070 /* XPCMessage.h */; };
+		300687CA14EA62B2006E8070 /* XPCMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 300687C814EA62B2006E8070 /* XPCMessage.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		300687CB14EA62B2006E8070 /* XPCMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 300687C814EA62B2006E8070 /* XPCMessage.h */; };
 		300687CC14EA62B2006E8070 /* XPCMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 300687C914EA62B2006E8070 /* XPCMessage.m */; };
 		300687CD14EA62B2006E8070 /* XPCMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 300687C914EA62B2006E8070 /* XPCMessage.m */; };
 		300687D014EA62B2006E8070 /* XPCMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 300687C914EA62B2006E8070 /* XPCMessage.m */; };
+		30DF8D5514EBC03900E5E876 /* XPCMessage+XPCKitInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 30DF8D5314EBC03900E5E876 /* XPCMessage+XPCKitInternal.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		30DF8D5614EBC03900E5E876 /* XPCMessage+XPCKitInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 30DF8D5314EBC03900E5E876 /* XPCMessage+XPCKitInternal.h */; };
+		30DF8D5714EBC03900E5E876 /* XPCMessage+XPCKitInternal.m in Sources */ = {isa = PBXBuildFile; fileRef = 30DF8D5414EBC03900E5E876 /* XPCMessage+XPCKitInternal.m */; };
+		30DF8D5814EBC03900E5E876 /* XPCMessage+XPCKitInternal.m in Sources */ = {isa = PBXBuildFile; fileRef = 30DF8D5414EBC03900E5E876 /* XPCMessage+XPCKitInternal.m */; };
+		30DF8D5914EBC03900E5E876 /* XPCMessage+XPCKitInternal.m in Sources */ = {isa = PBXBuildFile; fileRef = 30DF8D5414EBC03900E5E876 /* XPCMessage+XPCKitInternal.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -206,6 +211,8 @@
 		1EF4D9E6141C3EEE007BEEC0 /* TestService.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = TestService.entitlements; sourceTree = "<group>"; };
 		300687C814EA62B2006E8070 /* XPCMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XPCMessage.h; sourceTree = "<group>"; };
 		300687C914EA62B2006E8070 /* XPCMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XPCMessage.m; sourceTree = "<group>"; };
+		30DF8D5314EBC03900E5E876 /* XPCMessage+XPCKitInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "XPCMessage+XPCKitInternal.h"; sourceTree = "<group>"; };
+		30DF8D5414EBC03900E5E876 /* XPCMessage+XPCKitInternal.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "XPCMessage+XPCKitInternal.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -306,6 +313,8 @@
 				1E5F84A713E10DB700234F31 /* XPCService.m */,
 				300687C814EA62B2006E8070 /* XPCMessage.h */,
 				300687C914EA62B2006E8070 /* XPCMessage.m */,
+				30DF8D5314EBC03900E5E876 /* XPCMessage+XPCKitInternal.h */,
+				30DF8D5414EBC03900E5E876 /* XPCMessage+XPCKitInternal.m */,
 				1EEDD0EF13DEB96F00D5AEC3 /* XPCUUID.h */,
 				1EEDD0F013DEB97000D5AEC3 /* XPCUUID.m */,
 			);
@@ -430,6 +439,7 @@
 				1EF4D9E2141C38D0007BEEC0 /* NSFileHandle+XPCParse.h in Headers */,
 				1EB022A6141D9F3700BCC1FB /* NSDate+XPCParse.h in Headers */,
 				300687CB14EA62B2006E8070 /* XPCMessage.h in Headers */,
+				30DF8D5614EBC03900E5E876 /* XPCMessage+XPCKitInternal.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -448,10 +458,11 @@
 				1EF4D9DC141C36AA007BEEC0 /* XPCExtensions.h in Headers */,
 				1EF4D9DD141C36AA007BEEC0 /* XPCConnection.h in Headers */,
 				1E5F84A813E10DB700234F31 /* XPCService.h in Headers */,
+				300687CA14EA62B2006E8070 /* XPCMessage.h in Headers */,
 				1EF4D9E1141C38D0007BEEC0 /* NSFileHandle+XPCParse.h in Headers */,
 				1EEDD0F113DEB97000D5AEC3 /* XPCUUID.h in Headers */,
 				1EB022A5141D9F3700BCC1FB /* NSDate+XPCParse.h in Headers */,
-				300687CA14EA62B2006E8070 /* XPCMessage.h in Headers */,
+				30DF8D5514EBC03900E5E876 /* XPCMessage+XPCKitInternal.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -654,6 +665,7 @@
 				1EF4D9E4141C38D0007BEEC0 /* NSFileHandle+XPCParse.m in Sources */,
 				1EB022A8141D9F3700BCC1FB /* NSDate+XPCParse.m in Sources */,
 				300687CD14EA62B2006E8070 /* XPCMessage.m in Sources */,
+				30DF8D5814EBC03900E5E876 /* XPCMessage+XPCKitInternal.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -666,6 +678,7 @@
 				1EEDD09313DDC48800D5AEC3 /* NSNumber+XPCParse.m in Sources */,
 				1EEDD09B13DDC8A300D5AEC3 /* NSObject+XPCParse.m in Sources */,
 				300687D014EA62B2006E8070 /* XPCMessage.m in Sources */,
+				30DF8D5914EBC03900E5E876 /* XPCMessage+XPCKitInternal.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -702,6 +715,7 @@
 				1EF4D9E3141C38D0007BEEC0 /* NSFileHandle+XPCParse.m in Sources */,
 				1EB022A7141D9F3700BCC1FB /* NSDate+XPCParse.m in Sources */,
 				300687CC14EA62B2006E8070 /* XPCMessage.m in Sources */,
+				30DF8D5714EBC03900E5E876 /* XPCMessage+XPCKitInternal.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

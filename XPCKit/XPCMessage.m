@@ -2,7 +2,7 @@
 //  XPCMessage.m
 //  XPCKit
 //
-//  Created by Jörg Jacobsen on 14/2/12. Copyright 2011 XPCKit.
+//  Created by Jörg Jacobsen on 14/2/12. Copyright 2012 XPCKit.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 //  limitations under the License.
 //
 
-#import "XPCMessage.h"
+#import "XPCMessage+XPCKitInternal.h"
 #import "XPCExtensions.h"
 
 @implementation XPCMessage
@@ -37,6 +37,14 @@
     return [[[XPCMessage alloc] initWithMessage:inLowLevelMessage] autorelease];
 }
 
+
+// Returns an empty (reply)message based on a message supposedly coming from the wire.
+// If that incoming message was sent through -sentMessage:withReply: the returned message
+// will be setup for being sent to the incoming message's reply handler.
+// Otherwise, this method will simply return an empty message (that will be routed
+// to a generic event handler).
+// Initialize a message that is supposed to be the reply to inOriginalMessage.
+// See xpc_dictionary_create_reply() for details.
 
 + (id)messageReplyForMessage:(XPCMessage *)inOriginalMessage
 {
@@ -72,7 +80,7 @@
 //}
 
 
-// Designated initializer
+// First designated initializer
 
 - (id)initWithMessage:(xpc_object_t)inLowLevelMessage
 {
@@ -87,16 +95,39 @@
     return self;
 }
 
-// Our second designated initializer:
+- (id)_initReplyForMessage:(XPCMessage *)inOriginalMessage
+{
+    if ((self = [super init]))
+    {
+        if ([inOriginalMessage needsDirectReply])
+        {
+            _lowLevelMessage = xpc_dictionary_create_reply(inOriginalMessage.lowLevelMessage);
+        } else {
+            _lowLevelMessage = xpc_dictionary_create(NULL, NULL, 0);
+        }
+    }
+    return self;
+}
+
+
+// Second designated initializer:
+//
+// Returns an empty (reply)message based on a message supposedly coming from the wire.
+// If that incoming message was sent through -sentMessage:withReply: the returned message
+// will be setup for being sent to the incoming message's reply handler.
+// Otherwise, this method will simply return an empty message (that will be routed
+// to a generic event handler).
 // Initialize a message that is supposed to be the reply to inOriginalMessage.
 // See xpc_dictionary_create_reply() for details.
 
 - (id)initReplyForMessage:(XPCMessage *)inOriginalMessage
 {
-    if ((self = [super init])) {
-        _lowLevelMessage = xpc_dictionary_create_reply(inOriginalMessage.lowLevelMessage);
-    }
-    return self;
+        if (inOriginalMessage)
+        {
+            return [self _initReplyForMessage:inOriginalMessage];
+        } else {
+            return [self init];
+        }
 }
 
 

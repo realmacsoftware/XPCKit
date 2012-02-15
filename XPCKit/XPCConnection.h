@@ -21,8 +21,6 @@
 #import <dispatch/dispatch.h>
 #import "XPCTypes.h"
 
-#define XPC_DIRECT_REPLY_KEY @"__directReply"
-
 @interface XPCConnection : NSObject{
     xpc_connection_t _connection;
 	dispatch_queue_t _dispatchQueue;

@@ -18,7 +18,7 @@
 //
 
 #import "XPCConnection.h"
-#import "XPCMessage.h"
+#import "XPCMessage+XPCKitInternal.h"
 #import <xpc/xpc.h>
 #import "NSObject+XPCParse.h"
 #import "NSDictionary+XPCParse.h"
@@ -121,8 +121,8 @@
     // TODO: former implementation wrapped code into a dispatch_async()
     // Would we benefit from that here?
     
-    // Need to tell service's event handler that we want a direct reply
-    [inMessage setObject:[NSNumber numberWithBool:YES] forKey:XPC_DIRECT_REPLY_KEY];
+    // Need to tell message that we want a direct reply
+    [inMessage setNeedsDirectReply:YES];
     
     NSLog(@"Sending message %@", inMessage);
     xpc_connection_send_message_with_reply(_connection, inMessage.lowLevelMessage, dispatch_get_main_queue(), ^(xpc_object_t inLowLevelReplyMessage) {
