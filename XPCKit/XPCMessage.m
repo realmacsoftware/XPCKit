@@ -255,4 +255,24 @@
     }
 }
 
+
+#pragma mark - Miscellaneous
+
+-(NSString *) description
+{
+    NSMutableString *description = [NSMutableString stringWithFormat:@"\n{\n"];
+    
+    xpc_dictionary_apply(_XPCDictionary, ^bool(const char *inKey, xpc_object_t inValue){
+        NSString *key = [NSString stringWithCString:inKey encoding:NSUTF8StringEncoding];
+        id value = [NSObject objectWithXPCObject:inValue];
+        if(key && value)
+        {
+            [description appendFormat:@"    %@: %@\n", key, value];
+        }
+        return true;
+    });
+    [description appendFormat:@"}\n"];
+    return description;
+}
+
 @end
