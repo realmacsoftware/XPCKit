@@ -50,6 +50,6 @@
 // handling connections
 -(void)receiveConnection:(xpc_connection_t)connection;
 
--(void)_sendLog:(NSString *)string;
+-(void)sendLog:(NSString *)string;
 
 @end

@@ -185,7 +185,7 @@
 	});
 }
 
--(void)_sendLog:(NSString *)string{
+-(void)sendLog:(NSString *)string{
 #if XPCSendLogMessages
 	[self sendMessage:[XPCMessage messageWithObject:string forKey:@"XPCDebugLog"]];
 #endif

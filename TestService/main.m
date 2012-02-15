@@ -24,9 +24,9 @@
 int main(int argc, const char *argv[])
 {
 	[XPCService runServiceWithConnectionHandler:^(XPCConnection *connection){
-		[connection _sendLog:@"TestService received a connection"];
+		[connection sendLog:@"TestService received a connection"];
 		[connection setEventHandler:^(XPCMessage *message, XPCConnection *connection){
-			[connection _sendLog:[NSString stringWithFormat:@"TestService received a message! %@", message]];
+			[connection sendLog:[NSString stringWithFormat:@"TestService received a message! %@", message]];
             
             XPCMessage *reply = [XPCMessage messageReplyForMessage:message];
             
@@ -49,7 +49,7 @@ int main(int argc, const char *argv[])
                 NSData *data = [[NSFileManager defaultManager] contentsAtPath:path];
                 NSFileHandle *fileHandle = [NSFileHandle fileHandleForReadingAtPath:path];
                 
-//                [connection _sendLog:[NSString stringWithFormat:@"data %i bytes handle %@",data.length, fileHandle]];
+//                [connection sendLog:[NSString stringWithFormat:@"data %i bytes handle %@",data.length, fileHandle]];
 
                 [reply setObject:data forKey:@"data"];
                 [reply setObject:fileHandle forKey:@"fileHandle"];

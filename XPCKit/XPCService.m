@@ -59,7 +59,7 @@ static void XPCServiceConnectionHandler(xpc_connection_t handler){
 
 	[(NSMutableArray *)self.connections addObject:connection];
 	
-//	[connection _sendLog:@"We got a connection"];
+//	[connection sendLog:@"We got a connection"];
 	
 	if(self.connectionHandler){
 		self.connectionHandler(connection);
