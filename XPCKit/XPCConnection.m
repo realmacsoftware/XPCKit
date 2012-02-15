@@ -86,7 +86,7 @@
         }else if (object == XPC_ERROR_KEY_DESCRIPTION){
         }else if (object == XPC_ERROR_TERMINATION_IMMINENT){
         }else{
-            XPCMessage *message = [XPCMessage messageWithMessage: object];
+            XPCMessage *message = [XPCMessage messageWithXPCDictionary:object];
 			
 #if XPCSendLogMessages
 			if([message objectForKey:@"XPCDebugLog"]){
@@ -112,7 +112,7 @@
         inMessage = [XPCMessage messageWithObject:inMessage forKey:@"contents"];
     }
     NSLog(@"Sending message %@", inMessage);
-    xpc_connection_send_message(_connection, inMessage.lowLevelMessage);
+    xpc_connection_send_message(_connection, inMessage.XPCDictionary);
 }
 
 
@@ -125,8 +125,8 @@
     [inMessage setNeedsDirectReply:YES];
     
     NSLog(@"Sending message %@", inMessage);
-    xpc_connection_send_message_with_reply(_connection, inMessage.lowLevelMessage, dispatch_get_main_queue(), ^(xpc_object_t inLowLevelReplyMessage) {
-        XPCMessage *replyMessage = [XPCMessage messageWithMessage:inLowLevelReplyMessage];
+    xpc_connection_send_message_with_reply(_connection, inMessage.XPCDictionary, dispatch_get_main_queue(), ^(xpc_object_t inXPCReplyDictionary) {
+        XPCMessage *replyMessage = [XPCMessage messageWithXPCDictionary:inXPCReplyDictionary];
         replyHandler(replyMessage);
     });
 }

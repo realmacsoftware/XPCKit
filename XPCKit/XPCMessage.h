@@ -22,20 +22,22 @@
 
 @interface XPCMessage : NSObject
 {    
-    xpc_object_t _lowLevelMessage;
+    xpc_object_t _XPCDictionary;
 }
 
-@property (nonatomic, readonly) xpc_object_t lowLevelMessage;
+@property (nonatomic, readonly) xpc_object_t XPCDictionary;
 
 + (id)message;
-+ (id)messageWithMessage:(XPCMessage *)inLowLevelMessage;
++ (id)messageWithXPCDictionary:(xpc_object_t)inXPCDictionary;
 + (id)messageReplyForMessage:(XPCMessage *)inOriginalMessage;
 + (id)messageWithObjects:(NSArray *)inObjects forKeys:(NSArray *)inKeys;
 + (id)messageWithObject:(id)inObject forKey:(NSString *)inKey;
-- (id)initWithMessage:(xpc_object_t)inLowLevelMessage;
++ (id)messageWithObjectsAndKeys:(id)firstObject, ... NS_REQUIRES_NIL_TERMINATION;
+- (id)initWithXPCDictionary:(xpc_object_t)inXPCDictionary;
 - (id)initReplyForMessage:(XPCMessage *)inOriginalMessage;
 - (id)initWithObjects:(NSArray *)inObjects forKeys:(NSArray *)inKeys;
 - (id)initWithObject:(id)inObject forKey:(NSString *)inKey;
+- (id)initWithObjectsAndKeys:(id)firstObject, ... NS_REQUIRES_NIL_TERMINATION;
 
 - (id)objectForKey:(NSString *)inKey;
 - (void)setObject:(id)inObject forKey:(NSString *)inKey;

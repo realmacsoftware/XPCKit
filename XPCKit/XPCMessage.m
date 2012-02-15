@@ -20,9 +20,25 @@
 #import "XPCMessage+XPCKitInternal.h"
 #import "XPCExtensions.h"
 
+@interface XPCMessage()
+
+- (id)_initWithFirstObject:(id)firstObject arguments:(va_list)argumentList;
+
+@end
+
+
 @implementation XPCMessage
 
-@synthesize lowLevelMessage=_lowLevelMessage;
+@synthesize XPCDictionary=_XPCDictionary;
+
+- (void) setXPCDictionary:(xpc_object_t)inXPCDictionary
+{
+    if (xpc_get_type(inXPCDictionary) != XPC_TYPE_DICTIONARY)
+    {
+        [NSException raise:NSInvalidArgumentException format:@"Argument must be of type XPC_TYPE_DICTIONARY"];
+    }
+    _XPCDictionary = inXPCDictionary;
+}
 
 #pragma mark - Lifecycle
 
@@ -32,9 +48,9 @@
 }
 
 
-+ (id)messageWithMessage:(XPCMessage *)inLowLevelMessage
++ (id)messageWithXPCDictionary:(xpc_object_t)inXPCDictionary
 {
-    return [[[XPCMessage alloc] initWithMessage:inLowLevelMessage] autorelease];
+    return [[[XPCMessage alloc] initWithXPCDictionary:inXPCDictionary] autorelease];
 }
 
 
@@ -64,32 +80,29 @@
 }
 
 
-//+ (id)messageWithObjectsAndKeys:(id)firstObject, ... NS_REQUIRES_NIL_TERMINATION
-//{
-//    id eachObject;
-//    va_list argumentList;
-//    if (firstObject) // The first argument isn't part of the varargs list, so we'll handle it separately.
-//    {
-//        
-//        [self addObject: firstObject];
-//        va_start(argumentList, firstObject); // Start scanning for arguments after firstObject.
-//        while (eachObject = va_arg(argumentList, id)) // As many times as we can get an argument of type "id"
-//            [self addObject: eachObject]; // that isn't nil, add it to self's contents.
-//        va_end(argumentList);
-//    }
-//}
++ (id)messageWithObjectsAndKeys:(id)firstObject, ...
+{
+    XPCMessage *this = [XPCMessage alloc];
+    va_list argumentList;
+    
+    va_start(argumentList, firstObject); // Start scanning for arguments after firstObject.
+    this = [this _initWithFirstObject:firstObject arguments:argumentList];
+    va_end(argumentList);
+    
+    return [this autorelease];
+}
 
 
 // First designated initializer
 
-- (id)initWithMessage:(xpc_object_t)inLowLevelMessage
+- (id)initWithXPCDictionary:(xpc_object_t)inXPCDictionary
 {
     if ((self = [super init]))
     {
-        if (!inLowLevelMessage) {
-            _lowLevelMessage = xpc_dictionary_create(NULL, NULL, 0);
+        if (!inXPCDictionary) {
+            [self setXPCDictionary:xpc_dictionary_create(NULL, NULL, 0)];
         } else {
-            _lowLevelMessage = xpc_retain(inLowLevelMessage);
+            [self setXPCDictionary:xpc_retain(inXPCDictionary)];
         }
     }
     return self;
@@ -101,9 +114,9 @@
     {
         if ([inOriginalMessage needsDirectReply])
         {
-            _lowLevelMessage = xpc_dictionary_create_reply(inOriginalMessage.lowLevelMessage);
+            [self setXPCDictionary:xpc_dictionary_create_reply(inOriginalMessage.XPCDictionary)];
         } else {
-            _lowLevelMessage = xpc_dictionary_create(NULL, NULL, 0);
+            [self setXPCDictionary:xpc_dictionary_create(NULL, NULL, 0)];
         }
     }
     return self;
@@ -139,7 +152,7 @@
         NSString *key = nil;
         
         if ([inObjects count] != [inKeys count]) {
-            [NSException raise:NSInvalidArgumentException format:@"Object and key arrays have different sizes"];
+            [NSException raise:NSInvalidArgumentException format:@"Objects and keys don't match in numbers"];
         }
         for (NSUInteger i = 0; i < [inObjects count]; i++)
         {
@@ -161,16 +174,49 @@
 }
 
 
+- (id)_initWithFirstObject:(id)firstObject arguments:(va_list)argumentList
+{
+    if (firstObject) // The first argument isn't part of the varargs list, so we'll handle it separately.
+    {
+        id eachObject;
+        NSMutableArray *objects = [NSMutableArray array];
+        NSMutableArray *keys = [NSMutableArray array];
+        
+        [objects addObject: firstObject];
+        NSMutableArray *objectsOrKeys = keys;
+        while ((eachObject = va_arg(argumentList, id)))  // As many times as we can get an argument of type "id"
+        {
+            [objectsOrKeys addObject: eachObject];
+            objectsOrKeys = objectsOrKeys == objects ? keys : objects;
+        }
+        return [self initWithObjects:objects forKeys:keys];
+    }
+    return [self init];
+}
+
+
+- (id)initWithObjectsAndKeys:(id)firstObject, ...
+{
+    va_list argumentList;
+    
+    va_start(argumentList, firstObject); // Start scanning for arguments after firstObject.
+    self = [self _initWithFirstObject:firstObject arguments:argumentList];
+    va_end(argumentList);
+    
+    return self;
+}
+
+
 - (id)init
 {
-    return [self initWithMessage:nil];
+    return [self initWithXPCDictionary:NULL];
 }
 
 
 - (void)dealloc
 {
-    if (_lowLevelMessage) {
-        xpc_release(_lowLevelMessage);
+    if (_XPCDictionary) {
+        xpc_release(_XPCDictionary);
     }
     [super dealloc];
 }
@@ -182,7 +228,7 @@
 - (id)objectForKey:(NSString *)inKey
 {
     const char *lowLevelKey = [inKey cStringUsingEncoding:NSUTF8StringEncoding];
-    xpc_object_t value = xpc_dictionary_get_value(_lowLevelMessage, lowLevelKey);
+    xpc_object_t value = xpc_dictionary_get_value(_XPCDictionary, lowLevelKey);
     
     if (value) {
         return [NSObject objectWithXPCObject:value];
@@ -201,7 +247,7 @@
     if ([inObject respondsToSelector:@selector(newXPCObject)])
     {
         xpc_object_t value = [inObject newXPCObject];
-        xpc_dictionary_set_value([self lowLevelMessage], lowLevelKey, value);
+        xpc_dictionary_set_value(_XPCDictionary, lowLevelKey, value);
         xpc_release(value);
     } else {
         // TODO: Deal with model objects that are not directly supported through xpc_object_t
