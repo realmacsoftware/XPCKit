@@ -80,24 +80,28 @@
 
 -(void)receiveConnection:(xpc_connection_t)connection{
     __block XPCConnection *this = self;
+    __block XPCMessage *message = nil;
     xpc_connection_set_event_handler(connection, ^(xpc_object_t object){
-        if (object == XPC_ERROR_CONNECTION_INTERRUPTED){
-        }else if (object == XPC_ERROR_CONNECTION_INVALID){    
-        }else if (object == XPC_ERROR_KEY_DESCRIPTION){
-        }else if (object == XPC_ERROR_TERMINATION_IMMINENT){
+        if (object == XPC_ERROR_CONNECTION_INTERRUPTED ||
+            object == XPC_ERROR_CONNECTION_INVALID ||
+            object == XPC_ERROR_KEY_DESCRIPTION ||
+            object == XPC_ERROR_TERMINATION_IMMINENT)
+        {
+            xpc_object_t errorDict = xpc_dictionary_create(NULL, NULL, 0);
+            xpc_dictionary_set_value(errorDict, "__XPCError", object);
+            message = [XPCMessage messageWithXPCDictionary:errorDict];
         }else{
-            XPCMessage *message = [XPCMessage messageWithXPCDictionary:object];
-			
+            message = [XPCMessage messageWithXPCDictionary:object];
+		}	
 #if XPCSendLogMessages
-			if([message objectForKey:@"XPCDebugLog"]){
-				NSLog(@"LOG: %@", [message objectForKey:@"XPCDebugLog"]);
-				return;
-			}
+        if([message objectForKey:@"XPCDebugLog"]){
+            NSLog(@"LOG: %@", [message objectForKey:@"XPCDebugLog"]);
+            return;
+        }
 #endif
-			
-            if(this.eventHandler){
-                this.eventHandler(message, this);
-            }
+        
+        if(this.eventHandler){
+            this.eventHandler(message, this);
         }
     });
 }
