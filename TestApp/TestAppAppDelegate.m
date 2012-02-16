@@ -20,6 +20,7 @@
 #import "TestAppAppDelegate.h"
 #import <xpc/xpc.h>
 #import <dispatch/dispatch.h>
+#import "SBUtilities.h"
 
 @implementation TestAppAppDelegate
 
@@ -29,20 +30,20 @@
 {
     // Insert code here to initialize your application
     mathConnection = [[XPCConnection alloc] initWithServiceName:@"com.mustacheware.TestService"];
-//    mathConnection.eventHandler = ^(NSDictionary *message, XPCConnection *inConnection){
-//		NSNumber *result = [message objectForKey:@"result"];
-//		NSData *data = [message objectForKey:@"data"];
-//		NSFileHandle *fileHandle = [message objectForKey:@"fileHandle"];
-//		NSDate *date = [message objectForKey:@"date"];
-//		if(result){
-//			NSLog(@"We got a calculation result! %@", result);
-//		}else if(data || fileHandle){
-//			NSData *newData = [fileHandle readDataToEndOfFile];
-//			NSLog(@"We got a file handle! Read %lu bytes - %@", newData.length, fileHandle);
-//		}else if(date){
-//			NSLog(@"It is now %@", date);
-//		}
-//    };
+    mathConnection.eventHandler = ^(XPCMessage *message, XPCConnection *inConnection){
+		NSNumber *result = [message objectForKey:@"result"];
+		NSData *data = [message objectForKey:@"data"];
+		NSFileHandle *fileHandle = [message objectForKey:@"fileHandle"];
+		NSDate *date = [message objectForKey:@"date"];
+		if(result){
+			NSLog(@"We got a calculation result! %@", result);
+		}else if(data || fileHandle){
+			NSData *newData = [fileHandle readDataToEndOfFile];
+			NSLog(@"We got a file handle! Read %lu bytes - %@", newData.length, fileHandle);
+		}else if(date){
+			NSLog(@"It is now %@", date);
+		}
+    };
 	
 	readConnection = [[XPCConnection alloc] initWithServiceName:@"com.mustacheware.TestService"];
     readConnection.eventHandler = ^(XPCMessage *message, XPCConnection *inConnection){
@@ -60,13 +61,8 @@
 	// Let XPC service multiply some numbers
     
 	XPCMessage *multiplyData = 
-	[XPCMessage messageWithObjects:[NSArray arrayWithObjects:
-                                     @"multiply", [NSArray arrayWithObjects:
-                                                   [NSNumber numberWithInt:7],
-                                                   [NSNumber numberWithInt:6],
-                                                   [NSNumber numberWithDouble: 1.67], 
-                                                   nil], nil]
-                           forKeys:[NSArray arrayWithObjects:@"operation", @"values", nil]];
+	[XPCMessage messageWithObjectsAndKeys:@"multiply", @"operation",
+     [NSArray arrayWithObjects:[NSNumber numberWithInt:7], [NSNumber numberWithInt:6], [NSNumber numberWithDouble: 1.67], nil], @"values", nil];
 	
     [mathConnection sendMessage:multiplyData withReply:^(XPCMessage *message) {
 		NSNumber *result = [message objectForKey:@"result"];
@@ -75,11 +71,11 @@
         }
     }];
     
-	// Let XPC service ...
+	// Let XPC service read the contents of a file
     
 	XPCMessage *readData = 
-	[XPCMessage messageWithObjects:[NSArray arrayWithObjects:@"read", @"/Users/syco/Library/Safari/Bookmarks.plist", nil]
-                           forKeys:[NSArray arrayWithObjects:@"operation", @"path", nil]];
+	[XPCMessage messageWithObjectsAndKeys:@"read", @"operation",
+     [SBHomeDirectory() stringByAppendingString:@"/Library/Safari/Bookmarks.plist"], @"path", nil];
     
 	NSData *loadedData = [[NSFileManager defaultManager] contentsAtPath:[readData objectForKey:@"path"]];
 	NSFileHandle *loadedHandle = [NSFileHandle  fileHandleForReadingAtPath:[readData objectForKey:@"path"]];
@@ -87,7 +83,7 @@
     
 	[readConnection sendMessage:readData];
 	
-//	[mathConnection sendMessage:[XPCMessage messageWithObject:@"whatTimeIsIt" forKey:@"operation"]];
+	[mathConnection sendMessage:[XPCMessage messageWithObject:@"whatTimeIsIt" forKey:@"operation"]];
 }
 
 @end
