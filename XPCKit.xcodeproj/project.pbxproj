@@ -34,13 +34,10 @@
 		1EEDD08913DD508C00D5AEC3 /* XPCConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EEDD08713DD508C00D5AEC3 /* XPCConnection.m */; };
 		1EEDD08C13DDC34800D5AEC3 /* NSDictionary+XPCParse.h in Headers */ = {isa = PBXBuildFile; fileRef = 1EEDD08A13DDC34800D5AEC3 /* NSDictionary+XPCParse.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1EEDD08D13DDC34800D5AEC3 /* NSDictionary+XPCParse.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EEDD08B13DDC34800D5AEC3 /* NSDictionary+XPCParse.m */; };
-		1EEDD08E13DDC34800D5AEC3 /* NSDictionary+XPCParse.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EEDD08B13DDC34800D5AEC3 /* NSDictionary+XPCParse.m */; };
 		1EEDD09113DDC48800D5AEC3 /* NSNumber+XPCParse.h in Headers */ = {isa = PBXBuildFile; fileRef = 1EEDD08F13DDC48800D5AEC3 /* NSNumber+XPCParse.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1EEDD09213DDC48800D5AEC3 /* NSNumber+XPCParse.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EEDD09013DDC48800D5AEC3 /* NSNumber+XPCParse.m */; };
-		1EEDD09313DDC48800D5AEC3 /* NSNumber+XPCParse.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EEDD09013DDC48800D5AEC3 /* NSNumber+XPCParse.m */; };
 		1EEDD09913DDC8A300D5AEC3 /* NSObject+XPCParse.h in Headers */ = {isa = PBXBuildFile; fileRef = 1EEDD09713DDC8A300D5AEC3 /* NSObject+XPCParse.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1EEDD09A13DDC8A300D5AEC3 /* NSObject+XPCParse.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EEDD09813DDC8A300D5AEC3 /* NSObject+XPCParse.m */; };
-		1EEDD09B13DDC8A300D5AEC3 /* NSObject+XPCParse.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EEDD09813DDC8A300D5AEC3 /* NSObject+XPCParse.m */; };
 		1EEDD0A413DE65F800D5AEC3 /* NSData+XPCParse.h in Headers */ = {isa = PBXBuildFile; fileRef = 1EEDD0A213DE65F800D5AEC3 /* NSData+XPCParse.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1EEDD0A513DE65F800D5AEC3 /* NSData+XPCParse.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EEDD0A313DE65F800D5AEC3 /* NSData+XPCParse.m */; };
 		1EEDD0AC13DE669E00D5AEC3 /* NSString+XPCParse.h in Headers */ = {isa = PBXBuildFile; fileRef = 1EEDD0AA13DE669D00D5AEC3 /* NSString+XPCParse.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -86,17 +83,14 @@
 		300687CB14EA62B2006E8070 /* XPCMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 300687C814EA62B2006E8070 /* XPCMessage.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		300687CC14EA62B2006E8070 /* XPCMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 300687C914EA62B2006E8070 /* XPCMessage.m */; };
 		300687CD14EA62B2006E8070 /* XPCMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 300687C914EA62B2006E8070 /* XPCMessage.m */; };
-		300687D014EA62B2006E8070 /* XPCMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 300687C914EA62B2006E8070 /* XPCMessage.m */; };
 		30DF8D5514EBC03900E5E876 /* XPCMessage+XPCKitInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 30DF8D5314EBC03900E5E876 /* XPCMessage+XPCKitInternal.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		30DF8D5614EBC03900E5E876 /* XPCMessage+XPCKitInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 30DF8D5314EBC03900E5E876 /* XPCMessage+XPCKitInternal.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		30DF8D5714EBC03900E5E876 /* XPCMessage+XPCKitInternal.m in Sources */ = {isa = PBXBuildFile; fileRef = 30DF8D5414EBC03900E5E876 /* XPCMessage+XPCKitInternal.m */; };
 		30DF8D5814EBC03900E5E876 /* XPCMessage+XPCKitInternal.m in Sources */ = {isa = PBXBuildFile; fileRef = 30DF8D5414EBC03900E5E876 /* XPCMessage+XPCKitInternal.m */; };
-		30DF8D5914EBC03900E5E876 /* XPCMessage+XPCKitInternal.m in Sources */ = {isa = PBXBuildFile; fileRef = 30DF8D5414EBC03900E5E876 /* XPCMessage+XPCKitInternal.m */; };
 		30E9DAF914ED0B220070A6A4 /* SBUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E9DAF714ED0B220070A6A4 /* SBUtilities.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		30E9DAFA14ED0B220070A6A4 /* SBUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 30E9DAF714ED0B220070A6A4 /* SBUtilities.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		30E9DAFB14ED0B220070A6A4 /* SBUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 30E9DAF814ED0B220070A6A4 /* SBUtilities.m */; };
 		30E9DAFC14ED0B220070A6A4 /* SBUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 30E9DAF814ED0B220070A6A4 /* SBUtilities.m */; };
-		30E9DAFD14ED0B220070A6A4 /* SBUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 30E9DAF814ED0B220070A6A4 /* SBUtilities.m */; };
 		30E9DAFF14ED12480070A6A4 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30E9DAFE14ED12480070A6A4 /* Security.framework */; };
 		30E9DB0114ED139F0070A6A4 /* XPCKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EEDD0CF13DE9FAB00D5AEC3 /* XPCKit.framework */; };
 		30E9DB0214ED13DA0070A6A4 /* XPCKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EEDD0CF13DE9FAB00D5AEC3 /* XPCKit.framework */; };
@@ -706,12 +700,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				1EEDD04C13DD485400D5AEC3 /* XPCKitTests.m in Sources */,
-				1EEDD08E13DDC34800D5AEC3 /* NSDictionary+XPCParse.m in Sources */,
-				1EEDD09313DDC48800D5AEC3 /* NSNumber+XPCParse.m in Sources */,
-				1EEDD09B13DDC8A300D5AEC3 /* NSObject+XPCParse.m in Sources */,
-				300687D014EA62B2006E8070 /* XPCMessage.m in Sources */,
-				30DF8D5914EBC03900E5E876 /* XPCMessage+XPCKitInternal.m in Sources */,
-				30E9DAFD14ED0B220070A6A4 /* SBUtilities.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
