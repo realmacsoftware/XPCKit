@@ -51,6 +51,9 @@
     return object;
 }
 
+
+// Returns NULL if self does not conform to NSCoding protocol
+
 -(xpc_object_t)newXPCObject
 {
     if ([self conformsToProtocol:@protocol(NSCoding)])

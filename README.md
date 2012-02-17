@@ -1,3 +1,16 @@
+# This Fork
+
+...is a substantial extension/modification to the original XPCKit. Its highlights are:
+
+* Supports messages associated with a specific reply handler (like `xpc_connection_send_message_with_reply`)
+* Supports messages containing objects conforming to the NSCoding protocol
+
+**This fork is not api-compatible with its origin.**
+
+*****
+
+The original readme:
+
 XPCKit is a Cocoa library for wrapping the XPC C APIs in a handy object-oriented model. It is merely meant as an object-oriented wrapper for the C library, and does not attempt to layer any additional semantics on top. It contains code to run both "clients" (which create connections to services) and "services" (which receive connections), although you can mix and match to write raw C code or Objective-C code between different clients and services.
 
 Features
