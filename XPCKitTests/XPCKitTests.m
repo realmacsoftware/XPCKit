@@ -92,6 +92,28 @@
 	[self testEqualityOfXPCRoundtripForObject:[XPCUUID uuid]];
 }
 
+-(void)testData
+{
+    const char *pointer = "Bytes on a string";
+    NSData *inData = [NSData dataWithBytes:(const void *)pointer length:sizeof(char)*strlen(pointer)];
+
+    NSLog(@"NSData is %@", inData);
+    [self testEqualityOfXPCRoundtripForObject:inData];
+}
+
+-(void)testXPCMessage
+{
+    // Create archivable test object
+    NSSet *inTestSet = [NSSet setWithObjects:@"Hallo", @"Ballo", @"Drallo", nil];
+    
+    // Store/retrieve archivable test object in/from message:
+    XPCMessage *message = [XPCMessage message];
+    [message setObject:inTestSet forKey:@"greetings"];
+    NSSet *outTestSet = (NSSet *) [message objectForKey:@"greetings"];
+    
+    STAssertEqualObjects(inTestSet, outTestSet,@"Input object %@ is not equal to output object %@", inTestSet, outTestSet);
+}
+
 -(void)testEqualityOfXPCRoundtripForObject:(id)object{
 	STAssertNotNil(object, @"Source object is nil");
 	
@@ -105,7 +127,7 @@
 		NSTimeInterval delta = fabsf([object timeIntervalSinceDate:outObject]);
 		BOOL smallEnough = (delta < 0.000001);
 		STAssertTrue(smallEnough, @"Date %@ was not equal to result %@", object, outObject);
-	}else{
+    }else{
 		STAssertEqualObjects(object, outObject, @"Object %@ was not equal to result %@", object, outObject);
 	}
 	

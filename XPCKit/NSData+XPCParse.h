@@ -23,6 +23,7 @@
 @interface NSData (XPCParse)
 
 +(NSData *)dataWithXPCObject:(xpc_object_t)xpc;
++(id)objectWithXPCObject:(xpc_object_t)xpcObject;
 -(xpc_object_t)newXPCObject;
 
 @end

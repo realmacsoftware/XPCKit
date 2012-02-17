@@ -32,8 +32,13 @@
 		object = [NSArray arrayWithContentsOfXPCObject:xpcObject];
 	}else if(type == XPC_TYPE_DATE){
 		object = [NSDate dateWithXPCObject:xpcObject];
-    }else if(type == XPC_TYPE_DATA || type == XPC_TYPE_SHMEM){
-        object = [NSData dataWithXPCObject:xpcObject];
+    }else if(type == XPC_TYPE_DATA || type == XPC_TYPE_SHMEM)
+    {
+        // Try to return an object that was archived as NSData. Return NSData if that fails.
+        object = [NSData objectWithXPCObject:xpcObject];
+        if (!object) {
+            object = [NSData dataWithXPCObject:xpcObject];
+        }
     }else if(type == XPC_TYPE_STRING){
         object = [NSString stringWithXPCObject:xpcObject];
     }else if(type == XPC_TYPE_UUID){
@@ -46,4 +51,13 @@
     return object;
 }
 
+-(xpc_object_t)newXPCObject
+{
+    if ([self conformsToProtocol:@protocol(NSCoding)])
+    {
+        NSData *data = [NSKeyedArchiver archivedDataWithRootObject:self];
+        return xpc_data_create([data bytes], [data length]);
+    }
+    return NULL;
+}
 @end

@@ -240,18 +240,18 @@
 
 - (void)setObject:(id)inObject forKey:(NSString *)inKey
 {
-    const char *lowLevelKey = [inKey cStringUsingEncoding:NSUTF8StringEncoding];
+    xpc_object_t value = [inObject newXPCObject];
     
-    // TODO: Maybe we should instead implement newXPCObject on NSObject which will archive
-    // the object into xpc_data_t (but that required conformance to NSCoding)
-    if ([inObject respondsToSelector:@selector(newXPCObject)])
+    if (value) 
     {
-        xpc_object_t value = [inObject newXPCObject];
+        const char *lowLevelKey = [inKey cStringUsingEncoding:NSUTF8StringEncoding];
+        
         xpc_dictionary_set_value(_XPCDictionary, lowLevelKey, value);
         xpc_release(value);
     } else {
-        // TODO: Deal with model objects that are not directly supported through xpc_object_t
-        // (archive them into xpc_data_t)
+        // There is no way to convert inObject into an xpc_object_t object
+        
+        [NSException raise:NSInvalidArgumentException format:@"Object %@ is not convertible into xpc_object_t type. If you make it conform to NSCoding it will be. For further insight have a look at -newXPCObject.", inObject];
     }
 }
 

@@ -40,6 +40,25 @@
 	return data;
 }
 
+// Try to return an object from an archived object.
+// Returns nil if the NSData represented by xpcObject is not an object archive.
+
++ (id)objectWithXPCObject:(xpc_object_t)xpcObject
+{
+    id object = nil;
+    
+    //TODO: Is there a better way to test whether some NSData is an archived object?
+    @try {
+        object = [NSKeyedUnarchiver unarchiveObjectWithData:[NSData dataWithXPCObject:xpcObject]];
+    }
+    @catch (NSException *exception) {
+    }
+    @finally {
+    }
+    return object;
+}
+
+
 -(xpc_object_t)newXPCObject{
     return xpc_data_create([self bytes], [self length]);
 }
