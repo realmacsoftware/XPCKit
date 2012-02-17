@@ -21,6 +21,7 @@
 
 @interface XPCMessage (XPCKitInternal)
 
+- (xpc_object_t) XPCDictionary;
 - (BOOL) needsDirectReply;
 - (void) setNeedsDirectReply:(BOOL)inDirectReply;
 

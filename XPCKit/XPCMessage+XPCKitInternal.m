@@ -23,6 +23,12 @@
 
 @implementation XPCMessage (XPCKitInternal)
 
+- (xpc_object_t) XPCDictionary
+{
+    return _XPCDictionary;
+}
+
+
 - (BOOL) needsDirectReply
 {
     NSNumber *directReply = nil;

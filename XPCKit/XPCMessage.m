@@ -29,8 +29,6 @@
 
 @implementation XPCMessage
 
-@synthesize XPCDictionary=_XPCDictionary;
-
 - (void) setXPCDictionary:(xpc_object_t)inXPCDictionary
 {
     if (xpc_get_type(inXPCDictionary) != XPC_TYPE_DICTIONARY)
@@ -223,7 +221,7 @@
 
 
 #pragma mark - Accessing/Adding Values
-
+#pragma mark Accessors
 
 - (id)objectForKey:(NSString *)inKey
 {
@@ -237,6 +235,71 @@
     }
 }
 
+
+- (NSArray *) arrayForKey:(NSString *)inKey
+{
+    id object = [self objectForKey:inKey];
+    return (NSArray *) [object isKindOfClass:[NSArray class]] ? object : nil;
+}
+
+
+- (NSDictionary *) dictionaryForKey:(NSString *)inKey
+{
+    id object = [self objectForKey:inKey];
+    return (NSDictionary *) [object isKindOfClass:[NSDictionary class]] ? object : nil;
+}
+
+
+- (NSString *) stringForKey:(NSString *)inKey
+{
+    id object = [self objectForKey:inKey];
+    return (NSString *) [object isKindOfClass:[NSString class]] ? object : nil;
+}
+
+
+- (NSURL *) URLForKey:(NSString *)inKey
+{
+    id object = [self objectForKey:inKey];
+    return (NSURL *) [object isKindOfClass:[NSURL class]] ? object : nil;
+}
+
+
+- (NSData *) dataForKey:(NSString *)inKey
+{
+    id object = [self objectForKey:inKey];
+    return (NSData *) [object isKindOfClass:[NSData class]] ? object : nil;
+}
+
+
+- (BOOL) boolForKey:(NSString *)inKey
+{
+    id number = [self objectForKey:inKey];
+    return (BOOL) [number isKindOfClass:[NSNumber class]] ? [number boolValue] : 0;
+}
+
+
+- (float) floatForKey:(NSString *)inKey
+{
+    id number = [self objectForKey:inKey];
+    return (float) [number isKindOfClass:[NSNumber class]] ? [number floatValue] : 0;
+}
+
+
+- (NSInteger) integerForKey:(NSString *)inKey
+{
+    id number = [self objectForKey:inKey];
+    return (NSInteger) [number isKindOfClass:[NSNumber class]] ? [number integerValue] : 0;
+}
+
+
+- (double) doubleForKey:(NSString *)inKey
+{
+    id number = [self objectForKey:inKey];
+    return (double) [number isKindOfClass:[NSNumber class]] ? [number doubleValue] : 0;
+}
+
+
+#pragma mark Mutators
 
 - (void)setObject:(id)inObject forKey:(NSString *)inKey
 {
@@ -253,6 +316,30 @@
         
         [NSException raise:NSInvalidArgumentException format:@"Object %@ is not convertible into xpc_object_t type. If you make it conform to NSCoding it will be. For further insight have a look at -newXPCObject.", inObject];
     }
+}
+
+
+- (void) setBool:(BOOL)inValue forKey:(NSString *)inKey
+{
+    [self setObject:[NSNumber numberWithBool:inValue] forKey:inKey];
+}
+
+
+- (void) setDouble:(double)inValue forKey:(NSString *)inKey
+{
+    [self setObject:[NSNumber numberWithDouble:inValue] forKey:inKey];
+}
+
+
+- (void) setFloat:(float)inValue forKey:(NSString *)inKey
+{
+    [self setObject:[NSNumber numberWithFloat:inValue] forKey:inKey];
+}
+
+
+- (void) setInteger:(NSInteger)inValue forKey:(NSString *)inKey
+{
+    [self setObject:[NSNumber numberWithInteger:inValue] forKey:inKey];
 }
 
 

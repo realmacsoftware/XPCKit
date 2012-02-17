@@ -2,7 +2,7 @@
 //  XPCMessage.h
 //  XPCKit
 //
-//  Created by Jörg Jacobsen on 14/2/12. Copyright 2011 XPCKit.
+//  Created by Jörg Jacobsen on 14/2/12. Copyright 2012 XPCKit.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -25,8 +25,6 @@
     xpc_object_t _XPCDictionary;
 }
 
-@property (nonatomic, readonly) xpc_object_t XPCDictionary;
-
 + (id)message;
 + (id)messageWithXPCDictionary:(xpc_object_t)inXPCDictionary;
 + (id)messageReplyForMessage:(XPCMessage *)inOriginalMessage;
@@ -40,6 +38,24 @@
 - (id)initWithObjectsAndKeys:(id)firstObject, ... NS_REQUIRES_NIL_TERMINATION;
 
 - (id)objectForKey:(NSString *)inKey;
+
+// Convenience accessors
+- (NSArray *) arrayForKey:(NSString *)inKey;
+- (NSDictionary *) dictionaryForKey:(NSString *)inKey;
+- (NSString *) stringForKey:(NSString *)inKey;
+- (NSURL *) URLForKey:(NSString *)inKey;
+- (NSData *) dataForKey:(NSString *)inKey;
+- (BOOL) boolForKey:(NSString *)inKey;
+- (float) floatForKey:(NSString *)inKey;
+- (NSInteger) integerForKey:(NSString *)inKey;
+- (double) doubleForKey:(NSString *)inKey;
+
 - (void)setObject:(id)inObject forKey:(NSString *)inKey;
+
+// Convenience mutators
+- (void) setBool:(BOOL)inValue forKey:(NSString *)inKey;
+- (void) setDouble:(double)inValue forKey:(NSString *)inKey;
+- (void) setFloat:(float)inValue forKey:(NSString *)inKey;
+- (void) setInteger:(NSInteger)inValue forKey:(NSString *)inKey;
 
 @end
