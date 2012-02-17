@@ -271,8 +271,6 @@
 		1EEDD01D13DD485400D5AEC3 = {
 			isa = PBXGroup;
 			children = (
-				30E9DAFE14ED12480070A6A4 /* Security.framework */,
-				1EEDD0ED13DEB01F00D5AEC3 /* Foundation.framework */,
 				1EEDD03113DD485400D5AEC3 /* XPCKit */,
 				1EEDD04313DD485400D5AEC3 /* XPCKitTests */,
 				1EEDD05C13DD48BB00D5AEC3 /* TestApp */,
@@ -297,6 +295,8 @@
 		1EEDD02A13DD485400D5AEC3 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1EEDD0ED13DEB01F00D5AEC3 /* Foundation.framework */,
+				30E9DAFE14ED12480070A6A4 /* Security.framework */,
 				1EEDD0EB13DEA0A400D5AEC3 /* Cocoa.framework */,
 				1EEDD0B613DE79D200D5AEC3 /* Foundation.framework */,
 				1EEDD03D13DD485400D5AEC3 /* SenTestingKit.framework */,
@@ -981,6 +981,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_VERSION = A;
+				GCC_ENABLE_OBJC_GC = supported;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "XPCKit/XPCKit-Prefix.pch";
 				INFOPLIST_FILE = "XPCKit/XPCKit-Info.plist";
@@ -995,6 +996,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_VERSION = A;
+				GCC_ENABLE_OBJC_GC = supported;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "XPCKit/XPCKit-Prefix.pch";
 				INFOPLIST_FILE = "XPCKit/XPCKit-Info.plist";
