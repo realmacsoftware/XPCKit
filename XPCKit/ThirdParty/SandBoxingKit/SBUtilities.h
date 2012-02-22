@@ -1,6 +1,6 @@
 //
 //  SBSandboxUtilities.h
-//  XPCKit
+//  SandboxingKit
 //
 //  Created by Jörg Jacobsen on 16/2/12. Copyright 2012 SandboxingKit.
 //
