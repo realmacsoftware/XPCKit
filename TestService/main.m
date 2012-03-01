@@ -22,6 +22,8 @@
 #import "XPCKit.h"
 #import "SBUtilities.h"
 
+void ensureTestFile(void);
+
 static NSString *testFilePath;
 static const NSString *testFileContent = @"\nHere's to the crazy sandbox creators\nThe misfits, the rebels";
 
