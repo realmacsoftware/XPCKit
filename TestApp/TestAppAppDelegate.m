@@ -34,14 +34,12 @@
 {
     NSString *bundleId = [[NSBundle mainBundle] bundleIdentifier];
     NSString *path = [NSHomeDirectory() stringByAppendingFormat:@"/Library/Preferences/%@.plist", bundleId];
-    NSFileManager *fm = [[NSFileManager alloc] init];
     
     // Make sure user defaults file exists
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     [userDefaults setBool:YES forKey:@"Straw Man"];
     [userDefaults synchronize];
         
-    [fm release];
     return [NSURL fileURLWithPath:path];
 }
 
