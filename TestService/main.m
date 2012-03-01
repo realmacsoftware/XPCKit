@@ -20,9 +20,33 @@
 #import <Foundation/Foundation.h>
 #import <xpc/xpc.h>
 #import "XPCKit.h"
+#import "SBUtilities.h"
+
+static NSString *testFilePath;
+static const NSString *testFileContent = @"\nHere's to the crazy sandbox creators\nThe misfits, the rebels";
+
+
+// Create a file to test with that is out of the app's sandbox
+
+void ensureTestFile()
+{
+    NSFileManager *fm = [[NSFileManager alloc] init];
+    
+    if (![fm fileExistsAtPath:testFilePath]) {
+        if (![fm createFileAtPath:testFilePath contents:[testFileContent dataUsingEncoding:NSUTF8StringEncoding] attributes:nil])
+        {
+            [NSException raise:@"Could not create file" format:@"path %@", testFilePath];
+        }
+    }
+    [fm release];
+    
+}
+
 
 int main(int argc, const char *argv[])
 {
+    testFilePath = [SBHomeDirectory() stringByAppendingString:@"/XPCKit - you may delete this test file.txt"];
+    
 	[XPCService runServiceWithConnectionHandler:^(XPCConnection *connection){
 		[connection sendLog:@"TestService received a connection"];
 		[connection setEventHandler:^(XPCMessage *message, XPCConnection *connection){
@@ -45,7 +69,9 @@ int main(int argc, const char *argv[])
             
             if([[message objectForKey:@"operation"] isEqual:@"read"])
             {
-                NSString *path = [message objectForKey:@"path"];
+                ensureTestFile();
+                
+                NSString *path = testFilePath;
                 NSData *data = [[NSFileManager defaultManager] contentsAtPath:path];
                 NSFileHandle *fileHandle = [NSFileHandle fileHandleForReadingAtPath:path];
                 
@@ -59,6 +85,23 @@ int main(int argc, const char *argv[])
             if([[message objectForKey:@"operation"] isEqual:@"whatTimeIsIt"])
             {
                 [reply setObject:[NSDate date] forKey:@"date"];
+            }
+            
+            
+            if([[message objectForKey:@"operation"] isEqual:@"getDocumentBookmark"])
+            {
+                ensureTestFile();
+                
+                NSURL *documentContainerURL = [message objectForKey:@"bookmarkContainerURL"];
+                NSError *error = nil;
+                
+                NSURL *bookmarkURL = [[NSURL fileURLWithPath:testFilePath] fileReferenceURL];
+                NSData *documentBookmark =
+                [bookmarkURL bookmarkDataWithOptions:NSURLBookmarkCreationWithSecurityScope
+                      includingResourceValuesForKeys:nil
+                                       relativeToURL:documentContainerURL error:&error];
+
+                [reply setObject:documentBookmark forKey:@"result"];
             }
             
             

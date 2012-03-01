@@ -4,5 +4,7 @@
 <dict>
 	<key>com.apple.security.app-sandbox</key>
 	<true/>
+	<key>com.apple.security.temporary-exception.mach-lookup.global-name</key>
+	<string>com.apple.scopedbookmarksagent.xpc</string>
 </dict>
 </plist>

@@ -26,11 +26,33 @@
 
 @synthesize window;
 
+// Returns an arbitrary file URL where we have access to that file.
+// This may serve as a container URL a document scoped bookmark is relative to.
+// (We use our own preferences plist here)
+
+- (NSURL *)URLForArbitraryAccessibleFile
+{
+    NSString *bundleId = [[NSBundle mainBundle] bundleIdentifier];
+    NSString *path = [NSHomeDirectory() stringByAppendingFormat:@"/Library/Preferences/%@.plist", bundleId];
+    NSFileManager *fm = [[NSFileManager alloc] init];
+    
+    // Make sure user defaults file exists
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults setBool:YES forKey:@"Straw Man"];
+    [userDefaults synchronize];
+        
+    [fm release];
+    return [NSURL fileURLWithPath:path];
+}
+
+
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
     // Insert code here to initialize your application
     mathConnection = [[XPCConnection alloc] initWithServiceName:@"com.mustacheware.TestService"];
-    mathConnection.eventHandler = ^(XPCMessage *message, XPCConnection *inConnection){
+    mathConnection.eventHandler =
+    ^(XPCMessage *message, XPCConnection *inConnection)
+    {
 		NSNumber *result = [message objectForKey:@"result"];
 		NSData *data = [message objectForKey:@"data"];
 		NSFileHandle *fileHandle = [message objectForKey:@"fileHandle"];
@@ -46,7 +68,9 @@
     };
 	
 	readConnection = [[XPCConnection alloc] initWithServiceName:@"com.mustacheware.TestService"];
-    readConnection.eventHandler = ^(XPCMessage *message, XPCConnection *inConnection){
+    readConnection.eventHandler =
+    ^(XPCMessage *message, XPCConnection *inConnection)
+    {
 		NSData *data = [message objectForKey:@"data"];
 		NSFileHandle *fileHandle = [message objectForKey:@"fileHandle"];
 		if(data || fileHandle){
@@ -71,19 +95,53 @@
         }
     }];
     
-	// Let XPC service read the contents of a file
+    
+    // Read test file from XPC service (file will be chosen by XPC service)
     
 	XPCMessage *readData = 
-	[XPCMessage messageWithObjectsAndKeys:@"read", @"operation",
-     [SBHomeDirectory() stringByAppendingString:@"/Library/Safari/Bookmarks.plist"], @"path", nil];
-    
-	NSData *loadedData = [[NSFileManager defaultManager] contentsAtPath:[readData objectForKey:@"path"]];
-	NSFileHandle *loadedHandle = [NSFileHandle  fileHandleForReadingAtPath:[readData objectForKey:@"path"]];
-	NSLog(@"Sandbox is %@ at path %@, got %lu bytes and a file handle %@",((loadedData.length == 0 && loadedHandle == nil) ? @"working" : @"NOT working"), [readData objectForKey:@"path"], loadedData.length, loadedHandle);
-    
+	[XPCMessage messageWithObjectsAndKeys:@"read", @"operation", nil];
+        
 	[readConnection sendMessage:readData];
 	
+    
+    // Resolve document scoped bookmark for test file from XPC service (file will be chosen by XPC service)
+
+    // Need a straw man URL to serve as a "relative URL" for our document scoped bookmark
+    NSURL *bookmarkContainerURL = [self URLForArbitraryAccessibleFile];
+    
+    XPCMessage *bookmarkMessage =
+    [XPCMessage messageWithObjectsAndKeys:
+     @"getDocumentBookmark", @"operation",
+     bookmarkContainerURL,   @"bookmarkContainerURL", nil];
+    
+    [readConnection sendMessage:bookmarkMessage withReply:
+     ^(XPCMessage *message)
+    {
+        // Resolve bookmark and log file content
+        
+		id result = [message objectForKey:@"result"];
+        if (result && [result isKindOfClass:[NSData class]])
+        {
+            NSError *error = nil;
+            BOOL isStale = NO;
+            NSURL *URL = [NSURL URLByResolvingBookmarkData:result
+                                                   options:NSURLBookmarkResolutionWithSecurityScope
+                                             relativeToURL:bookmarkContainerURL
+                                       bookmarkDataIsStale:&isStale
+                                                     error:&error];
+            
+            [URL startAccessingSecurityScopedResource];
+            
+            NSString *fileContent = [NSString stringWithContentsOfURL:URL encoding:NSUTF8StringEncoding error:&error];
+            NSLog(@"Read from URL based on document-scoped bookmark: %@", fileContent);
+            
+            [URL stopAccessingSecurityScopedResource];
+            
+        }
+    }];
+    
 	[mathConnection sendMessage:[XPCMessage messageWithObject:@"whatTimeIsIt" forKey:@"operation"]];
+    
 }
 
 @end
