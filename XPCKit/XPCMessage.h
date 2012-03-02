@@ -20,6 +20,14 @@
 #import <Foundation/Foundation.h>
 #import <xpc/xpc.h>
 
+enum {
+    XPCConnectionInterrupted = 1001,
+    XPCConnectionInvalid = 1002,
+    XPCTerminationImminent = 2001,
+};
+
+extern const char *XPCMessageErrorKey;
+
 @interface XPCMessage : NSObject
 {    
     xpc_object_t _XPCDictionary;

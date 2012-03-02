@@ -23,6 +23,28 @@
 
 @implementation XPCMessage (XPCKitInternal)
 
++ (NSError *) errorForXPCObject:(xpc_object_t)object
+{
+    if (xpc_get_type(object) == XPC_TYPE_ERROR)
+    {
+        NSInteger errorCode = 0;
+        NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+        if (object == XPC_ERROR_CONNECTION_INVALID) {
+            errorCode = XPCConnectionInvalid;
+            [userInfo setValue:@"XPC connection is invalid" forKey:NSLocalizedDescriptionKey];
+        } else if (object == XPC_ERROR_CONNECTION_INTERRUPTED) {
+            errorCode = XPCConnectionInterrupted;
+            [userInfo setValue:@"XPC connection was interrupted" forKey:NSLocalizedDescriptionKey];
+        } else if (object == XPC_ERROR_TERMINATION_IMMINENT) {
+            errorCode = XPCTerminationImminent;
+            [userInfo setValue:@"XPC service termination is imminent" forKey:NSLocalizedDescriptionKey];
+        }
+        return [NSError errorWithDomain:@"XPCErrorDomain" code:errorCode userInfo:userInfo];
+    }
+    return nil;
+}
+
+
 - (xpc_object_t) XPCDictionary
 {
     return _XPCDictionary;
@@ -40,5 +62,4 @@
 {
     [self setObject:[NSNumber numberWithBool:inDirectReply] forKey:XPC_DIRECT_REPLY_KEY];
 }
-
 @end

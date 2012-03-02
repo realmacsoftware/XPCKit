@@ -123,6 +123,12 @@
 
 -(void)sendMessage:(XPCMessage *)inMessage withReply:(XPCReplyHandler)replyHandler
 {
+    [self sendMessage:inMessage withReply:replyHandler errorHandler:nil];
+}
+
+
+-(void)sendMessage:(XPCMessage *)inMessage withReply:(XPCReplyHandler)replyHandler errorHandler:(XPCErrorHandler)errorHandler
+{
     // Need to tell message that we want a direct reply
     [inMessage setNeedsDirectReply:YES];
     
@@ -131,19 +137,23 @@
         xpc_connection_send_message_with_reply(_connection, inMessage.XPCDictionary, dispatch_get_main_queue(), ^(xpc_object_t event) {
             
             xpc_type_t type = xpc_get_type(event);
-            // TODO: Provide some more elaborate error handling here
-            // N.b. Apple supports different error handlers with NSXPCConnection in Mountain Lion
-            if (type == XPC_TYPE_ERROR) {
-                if (event == XPC_ERROR_CONNECTION_INVALID) {
-                    // The process on the other end of the connection has either
-                    // crashed or cancelled the connection. After receiving this error,
-                    // the connection is in an invalid state, and you do not need to
-                    // call xpc_connection_cancel(). Just tear down any associated state
-                    // here.
-                    NSLog(@"Connection is invalid");
-                } else if (event == XPC_ERROR_CONNECTION_INTERRUPTED) {
-                    // Handle per-connection termination cleanup.
-                    NSLog(@"Connection was interrupted");
+
+            if (type == XPC_TYPE_ERROR)
+            {
+                if (errorHandler) {
+                    errorHandler([XPCMessage errorForXPCObject:event]);
+                } else {
+                    if (event == XPC_ERROR_CONNECTION_INVALID) {
+                        // The process on the other end of the connection has either
+                        // crashed or cancelled the connection. After receiving this error,
+                        // the connection is in an invalid state, and you do not need to
+                        // call xpc_connection_cancel(). Just tear down any associated state
+                        // here.
+                        NSLog(@"Connection is invalid");
+                    } else if (event == XPC_ERROR_CONNECTION_INTERRUPTED) {
+                        // Handle per-connection termination cleanup.
+                        NSLog(@"Connection was interrupted");
+                    }
                 }
             } else {
                 assert(type == XPC_TYPE_DICTIONARY);
@@ -153,6 +163,7 @@
         });
 	});
 }
+
 
 -(NSString *)connectionName{
 	__block char* name = NULL; 

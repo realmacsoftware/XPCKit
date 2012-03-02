@@ -43,6 +43,7 @@
 
 -(void)sendMessage:(XPCMessage *)message;
 -(void)sendMessage:(XPCMessage *)message withReply:(XPCReplyHandler)replyHandler;
+-(void)sendMessage:(XPCMessage *)message withReply:(XPCReplyHandler)replyHandler errorHandler:(XPCErrorHandler)errorHandler;
 
 -(void)suspend;
 -(void)resume;

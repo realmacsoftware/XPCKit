@@ -79,14 +79,16 @@
 				NSLog(@"We got a file handle! Read %lu bytes - %@", newData.length, fileHandle);
 		}
     };
+    
+    XPCConnection *crashConnection = [[XPCConnection alloc] initWithServiceName:@"com.mustacheware.TestService"];
 	
 	// Let XPC service multiply some numbers
     
-	XPCMessage *multiplyData = 
+	XPCMessage *message = 
 	[XPCMessage messageWithObjectsAndKeys:@"multiply", @"operation",
      [NSArray arrayWithObjects:[NSNumber numberWithInt:7], [NSNumber numberWithInt:6], [NSNumber numberWithDouble: 1.67], nil], @"values", nil];
 	
-    [mathConnection sendMessage:multiplyData withReply:^(XPCMessage *message) {
+    [mathConnection sendMessage:message withReply:^(XPCMessage *message) {
 		NSNumber *result = [message objectForKey:@"result"];
         if (result) {
             NSLog(@"I asked for multiplying and got back the following result: %@", result);
@@ -96,10 +98,9 @@
     
     // Read test file from XPC service (file will be chosen by XPC service)
     
-	XPCMessage *readData = 
-	[XPCMessage messageWithObjectsAndKeys:@"read", @"operation", nil];
+	message = [XPCMessage messageWithObjectsAndKeys:@"read", @"operation", nil];
         
-	[readConnection sendMessage:readData];
+	[readConnection sendMessage:message];
 	
     
     // Resolve document scoped bookmark for test file from XPC service (file will be chosen by XPC service)
@@ -107,17 +108,16 @@
     // Need a straw man URL to serve as a "relative URL" for our document scoped bookmark
     NSURL *bookmarkContainerURL = [self URLForArbitraryAccessibleFile];
     
-    XPCMessage *bookmarkMessage =
-    [XPCMessage messageWithObjectsAndKeys:
-     @"getDocumentBookmark", @"operation",
-     bookmarkContainerURL,   @"bookmarkContainerURL", nil];
+    message = [XPCMessage messageWithObjectsAndKeys:
+               @"getDocumentBookmark", @"operation",
+               bookmarkContainerURL,   @"bookmarkContainerURL", nil];
     
-    [readConnection sendMessage:bookmarkMessage withReply:
-     ^(XPCMessage *message)
+    [readConnection sendMessage:message withReply:
+     ^(XPCMessage *inMessage)
     {
         // Resolve bookmark and log file content
         
-		id result = [message objectForKey:@"result"];
+		id result = [inMessage objectForKey:@"result"];
         if (result && [result isKindOfClass:[NSData class]])
         {
             NSError *error = nil;
@@ -138,8 +138,18 @@
         }
     }];
     
-	[mathConnection sendMessage:[XPCMessage messageWithObject:@"whatTimeIsIt" forKey:@"operation"]];
+    // Crash the XPC service to test error handler provided
+
+    message = [XPCMessage messageWithObjectsAndKeys:@"crashYou", @"operation", nil];
     
+    [crashConnection sendMessage:message withReply:^(XPCMessage *inMessage) {
+        // Empty reply handler since we are crashing the XPC service to test error handling
+    } errorHandler:^(NSError *inError) {
+        NSLog(@"XPC service successfuly crashed with description: %@", [inError localizedDescription]);
+    }];
+
+    
+	[mathConnection sendMessage:[XPCMessage messageWithObject:@"whatTimeIsIt" forKey:@"operation"]];
 }
 
 @end

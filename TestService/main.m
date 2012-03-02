@@ -56,7 +56,9 @@ int main(int argc, const char *argv[])
             
             XPCMessage *reply = [XPCMessage messageReplyForMessage:message];
             
-            if([[message objectForKey:@"operation"] isEqual:@"multiply"])
+            NSString *operation = [message objectForKey:@"operation"];
+            
+            if([operation isEqual:@"multiply"])
             {
                 NSArray *values = [message objectForKey:@"values"];
                 
@@ -69,7 +71,7 @@ int main(int argc, const char *argv[])
             }
             
             
-            if([[message objectForKey:@"operation"] isEqual:@"read"])
+            if([operation isEqual:@"read"])
             {
                 ensureTestFile();
                 
@@ -84,13 +86,13 @@ int main(int argc, const char *argv[])
             }
             
             
-            if([[message objectForKey:@"operation"] isEqual:@"whatTimeIsIt"])
+            if([operation isEqual:@"whatTimeIsIt"])
             {
-                [reply setObject:[NSDate date] forKey:@"date"];
+               [reply setObject:[NSDate date] forKey:@"date"];
             }
             
             
-            if([[message objectForKey:@"operation"] isEqual:@"getDocumentBookmark"])
+            if([operation isEqual:@"getDocumentBookmark"])
             {
                 ensureTestFile();
                 
@@ -104,6 +106,17 @@ int main(int argc, const char *argv[])
                                        relativeToURL:documentContainerURL error:&error];
 
                 [reply setObject:documentBookmark forKey:@"result"];
+            }
+            
+            
+            if([operation isEqual:@"crashYou"])
+            {
+                // Give other operations a chance to complete
+                sleep(2);
+                
+                // Crash me
+                NSArray *dummyArray = [NSArray array];
+                [dummyArray objectAtIndex:10];
             }
             
             

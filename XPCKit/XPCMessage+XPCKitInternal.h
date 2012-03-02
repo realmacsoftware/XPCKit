@@ -21,6 +21,7 @@
 
 @interface XPCMessage (XPCKitInternal)
 
++ (NSError *) errorForXPCObject:(xpc_object_t)object;
 - (xpc_object_t) XPCDictionary;
 - (BOOL) needsDirectReply;
 - (void) setNeedsDirectReply:(BOOL)inDirectReply;
