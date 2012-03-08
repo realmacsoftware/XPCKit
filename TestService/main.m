@@ -21,6 +21,7 @@
 #import <xpc/xpc.h>
 #import "XPCKit.h"
 #import "SBUtilities.h"
+#import "Multiplier.h"
 
 void ensureTestFile(void);
 
@@ -47,6 +48,8 @@ void ensureTestFile()
 
 int main(int argc, const char *argv[])
 {
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    
     testFilePath = [SBHomeDirectory() stringByAppendingString:@"/XPCKit - you may delete this test file.txt"];
     
 	[XPCService runServiceWithConnectionHandler:^(XPCConnection *connection){
@@ -54,74 +57,83 @@ int main(int argc, const char *argv[])
 		[connection setEventHandler:^(XPCMessage *message, XPCConnection *connection){
 			[connection sendLog:[NSString stringWithFormat:@"TestService received a message! %@", message]];
             
-            XPCMessage *reply = [XPCMessage messageReplyForMessage:message];
+            // Got an invocable incoming message?
             
-            NSString *operation = [message objectForKey:@"operation"];
+            XPCMessage *reply = [message invoke];
             
-            if([operation isEqual:@"multiply"])
+            // Otherwise, we define the semantics of the incoming message here
+            
+            if (!reply)
             {
-                NSArray *values = [message objectForKey:@"values"];
+                reply = [XPCMessage messageReplyForMessage:message];
                 
-                // calculate the product
-                double product = 1.0;
-                for(NSUInteger index=0; index < values.count; index++){
-                    product = product * [(NSNumber *)[values objectAtIndex:index] doubleValue];
+                NSString *operation = [message objectForKey:@"operation"];
+                
+                if([operation isEqual:@"multiply"])
+                {
+                    NSArray *values = [message objectForKey:@"values"];
+                    
+                    // calculate the product
+                    double product = 1.0;
+                    for(NSUInteger index=0; index < values.count; index++){
+                        product = product * [(NSNumber *)[values objectAtIndex:index] doubleValue];
+                    }
+                    [reply setObject:[NSNumber numberWithDouble:product] forKey:@"result"];
                 }
-                [reply setObject:[NSNumber numberWithDouble:product] forKey:@"result"];
-            }
-            
-            
-            if([operation isEqual:@"read"])
-            {
-                ensureTestFile();
                 
-                NSString *path = testFilePath;
-                NSData *data = [[NSFileManager defaultManager] contentsAtPath:path];
-                NSFileHandle *fileHandle = [NSFileHandle fileHandleForReadingAtPath:path];
                 
-//                [connection sendLog:[NSString stringWithFormat:@"data %i bytes handle %@",data.length, fileHandle]];
-
-                [reply setObject:data forKey:@"data"];
-                [reply setObject:fileHandle forKey:@"fileHandle"];
-            }
-            
-            
-            if([operation isEqual:@"whatTimeIsIt"])
-            {
-               [reply setObject:[NSDate date] forKey:@"date"];
-            }
-            
-            
-            if([operation isEqual:@"getDocumentBookmark"])
-            {
-                ensureTestFile();
+                if([operation isEqual:@"read"])
+                {
+                    ensureTestFile();
+                    
+                    NSString *path = testFilePath;
+                    NSData *data = [[NSFileManager defaultManager] contentsAtPath:path];
+                    NSFileHandle *fileHandle = [NSFileHandle fileHandleForReadingAtPath:path];
+                    
+                    //                [connection sendLog:[NSString stringWithFormat:@"data %i bytes handle %@",data.length, fileHandle]];
+                    
+                    [reply setObject:data forKey:@"data"];
+                    [reply setObject:fileHandle forKey:@"fileHandle"];
+                }
                 
-                NSURL *documentContainerURL = [message objectForKey:@"bookmarkContainerURL"];
-                NSError *error = nil;
                 
-                NSURL *bookmarkURL = [[NSURL fileURLWithPath:testFilePath] fileReferenceURL];
-                NSData *documentBookmark =
-                [bookmarkURL bookmarkDataWithOptions:NSURLBookmarkCreationWithSecurityScope
-                      includingResourceValuesForKeys:nil
-                                       relativeToURL:documentContainerURL error:&error];
-
-                [reply setObject:documentBookmark forKey:@"result"];
-            }
-            
-            
-            if([operation isEqual:@"crashYou"])
-            {
-                // Give other operations a chance to complete
-                sleep(2);
+                if([operation isEqual:@"whatTimeIsIt"])
+                {
+                    [reply setObject:[NSDate date] forKey:@"date"];
+                }
                 
-                // Crash me
-                NSArray *dummyArray = [NSArray array];
-                [dummyArray objectAtIndex:10];
+                
+                if([operation isEqual:@"getDocumentBookmark"])
+                {
+                    ensureTestFile();
+                    
+                    NSURL *documentContainerURL = [message objectForKey:@"bookmarkContainerURL"];
+                    NSError *error = nil;
+                    
+                    NSURL *bookmarkURL = [[NSURL fileURLWithPath:testFilePath] fileReferenceURL];
+                    NSData *documentBookmark =
+                    [bookmarkURL bookmarkDataWithOptions:NSURLBookmarkCreationWithSecurityScope
+                          includingResourceValuesForKeys:nil
+                                           relativeToURL:documentContainerURL error:&error];
+                    
+                    [reply setObject:documentBookmark forKey:@"result"];
+                }
+                
+                
+                if([operation isEqual:@"crashYou"])
+                {
+                    // Give other operations a chance to complete
+                    sleep(2);
+                    
+                    // Crash me
+                    NSArray *dummyArray = [NSArray array];
+                    [dummyArray objectAtIndex:10];
+                }
+                
+                
+                // Treat more operations here...
+                
             }
-            
-            
-            // Treat more operations here...
-            
             
             [connection sendMessage:reply];
                 
@@ -129,7 +141,7 @@ int main(int argc, const char *argv[])
 //        xpc_connection_resume(xpc_retain(connection.connection));
 	}];
 	
-	
+	[pool drain];
 	
 	return 0;
 }

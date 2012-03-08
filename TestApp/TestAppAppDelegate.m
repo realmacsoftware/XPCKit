@@ -21,6 +21,7 @@
 #import <xpc/xpc.h>
 #import <dispatch/dispatch.h>
 #import "SBUtilities.h"
+#import "Multiplier.h"
 
 @implementation TestAppAppDelegate
 
@@ -95,6 +96,26 @@
         }
     }];
     
+    // Multiply some (other) numbers using a more generalized message sending mechanism that is designed to also work in
+    // a non-XPC service environment (like OS X  10.6)
+    
+    NSArray * values = [NSArray arrayWithObjects:
+                        [NSNumber numberWithInt:14],
+                        [NSNumber numberWithInt:7],
+                        [NSNumber numberWithDouble: 1.67], nil];
+    
+    Multiplier *multiplier = [[Multiplier alloc] initWithValues:values];
+    
+//    XPCMsgDispatchAsyncWithObject(nil, @selector(multiply), multiplier, nil,      // With nil connection it will use GCD
+    XPCMsgDispatchAsyncWithObject(mathConnection, @selector(multiply), multiplier, nil,
+                                  ^(id product, NSError *error) {
+                                      if (error) {
+                                          NSLog(@"Oops! we got an error: %@", [error localizedDescription]);
+                                      } else {
+                                          NSLog(@"I asked for multiplying some numbers and got back: %@", product);
+                                      }
+                                  });
+
     
     // Read test file from XPC service (file will be chosen by XPC service)
     
