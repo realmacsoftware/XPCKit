@@ -2,7 +2,7 @@
 //  SBSandboxUtilities.h
 //  SandboxingKit
 //
-//  Created by Jörg Jacobsen on 16/2/12. Copyright 2012 SandboxingKit.
+//  Created by Jörg Jacobsen on 2/16/12. Copyright 2012 SandboxingKit.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
