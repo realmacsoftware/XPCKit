@@ -52,6 +52,7 @@
         object = [NSKeyedUnarchiver unarchiveObjectWithData:[NSData dataWithXPCObject:xpcObject]];
     }
     @catch (NSException *exception) {
+        NSLog(@"NSData object is not an object archive (this is not necessarily an error). Reason: %@", exception);
     }
     @finally {
     }
