@@ -26,6 +26,7 @@
 typedef void (^XPCEventHandler)(XPCMessage *, XPCConnection *);
 typedef void (^XPCConnectionHandler)(XPCConnection *);
 typedef void (^XPCReplyHandler)(XPCMessage *);
+typedef void (^XPCReturnValueHandler)(id, NSError *);
 typedef void (^XPCErrorHandler)(NSError *);
 
 #pragma mark Notifications

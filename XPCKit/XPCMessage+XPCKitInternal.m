@@ -62,4 +62,17 @@
 {
     [self setObject:[NSNumber numberWithBool:inDirectReply] forKey:XPC_DIRECT_REPLY_KEY];
 }
+
+
+// Returns the return value stored in a message that was instantiated through -invoke
+
+- (id) invocationReturnValue:(NSError **)outError
+{
+    id result = [self objectForKey:@"result"];
+    *outError = [self objectForKey:@"error"];
+    
+    return result;
+}
+
+
 @end

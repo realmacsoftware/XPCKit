@@ -83,6 +83,11 @@
 		300687CB14EA62B2006E8070 /* XPCMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 300687C814EA62B2006E8070 /* XPCMessage.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		300687CC14EA62B2006E8070 /* XPCMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 300687C914EA62B2006E8070 /* XPCMessage.m */; };
 		300687CD14EA62B2006E8070 /* XPCMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 300687C914EA62B2006E8070 /* XPCMessage.m */; };
+		30DE545D150790C200C06806 /* XPCUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 30DE545C150790C200C06806 /* XPCUtilities.m */; };
+		30DE545E150790C200C06806 /* XPCUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 30DE545C150790C200C06806 /* XPCUtilities.m */; };
+		30DE54631507A9B300C06806 /* Multiplier.m in Sources */ = {isa = PBXBuildFile; fileRef = 30DE54621507A9B300C06806 /* Multiplier.m */; };
+		30DE54641507CCB200C06806 /* Multiplier.m in Sources */ = {isa = PBXBuildFile; fileRef = 30DE54621507A9B300C06806 /* Multiplier.m */; };
+		30DE54661508EFD200C06806 /* XPCUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 30DE54651508EFD200C06806 /* XPCUtilities.h */; };
 		30DF8D5514EBC03900E5E876 /* XPCMessage+XPCKitInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 30DF8D5314EBC03900E5E876 /* XPCMessage+XPCKitInternal.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		30DF8D5614EBC03900E5E876 /* XPCMessage+XPCKitInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 30DF8D5314EBC03900E5E876 /* XPCMessage+XPCKitInternal.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		30DF8D5714EBC03900E5E876 /* XPCMessage+XPCKitInternal.m in Sources */ = {isa = PBXBuildFile; fileRef = 30DF8D5414EBC03900E5E876 /* XPCMessage+XPCKitInternal.m */; };
@@ -211,6 +216,10 @@
 		1EF4D9E6141C3EEE007BEEC0 /* TestService.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = TestService.entitlements; sourceTree = "<group>"; };
 		300687C814EA62B2006E8070 /* XPCMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XPCMessage.h; sourceTree = "<group>"; };
 		300687C914EA62B2006E8070 /* XPCMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XPCMessage.m; sourceTree = "<group>"; };
+		30DE545C150790C200C06806 /* XPCUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XPCUtilities.m; sourceTree = "<group>"; };
+		30DE54611507A9B300C06806 /* Multiplier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Multiplier.h; sourceTree = "<group>"; };
+		30DE54621507A9B300C06806 /* Multiplier.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Multiplier.m; sourceTree = "<group>"; };
+		30DE54651508EFD200C06806 /* XPCUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XPCUtilities.h; sourceTree = "<group>"; };
 		30DF8D5314EBC03900E5E876 /* XPCMessage+XPCKitInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "XPCMessage+XPCKitInternal.h"; sourceTree = "<group>"; };
 		30DF8D5414EBC03900E5E876 /* XPCMessage+XPCKitInternal.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "XPCMessage+XPCKitInternal.m"; sourceTree = "<group>"; };
 		30E9DAF714ED0B220070A6A4 /* SBUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBUtilities.h; sourceTree = "<group>"; };
@@ -323,6 +332,8 @@
 				30DF8D5414EBC03900E5E876 /* XPCMessage+XPCKitInternal.m */,
 				1EEDD0EF13DEB96F00D5AEC3 /* XPCUUID.h */,
 				1EEDD0F013DEB97000D5AEC3 /* XPCUUID.m */,
+				30DE54651508EFD200C06806 /* XPCUtilities.h */,
+				30DE545C150790C200C06806 /* XPCUtilities.m */,
 			);
 			path = XPCKit;
 			sourceTree = "<group>";
@@ -361,6 +372,8 @@
 			children = (
 				1EEDD06813DD48BB00D5AEC3 /* TestAppAppDelegate.h */,
 				1EEDD06913DD48BB00D5AEC3 /* TestAppAppDelegate.m */,
+				30DE54611507A9B300C06806 /* Multiplier.h */,
+				30DE54621507A9B300C06806 /* Multiplier.m */,
 				1EEDD06B13DD48BC00D5AEC3 /* MainMenu.xib */,
 				1EEDD05D13DD48BB00D5AEC3 /* Supporting Files */,
 			);
@@ -488,6 +501,7 @@
 				1EB022A5141D9F3700BCC1FB /* NSDate+XPCParse.h in Headers */,
 				30E9DAF914ED0B220070A6A4 /* SBUtilities.h in Headers */,
 				30DF8D5514EBC03900E5E876 /* XPCMessage+XPCKitInternal.h in Headers */,
+				30DE54661508EFD200C06806 /* XPCUtilities.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -692,6 +706,7 @@
 				300687CD14EA62B2006E8070 /* XPCMessage.m in Sources */,
 				30DF8D5814EBC03900E5E876 /* XPCMessage+XPCKitInternal.m in Sources */,
 				30E9DAFC14ED0B220070A6A4 /* SBUtilities.m in Sources */,
+				30DE545E150790C200C06806 /* XPCUtilities.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -709,6 +724,7 @@
 			files = (
 				1EEDD06313DD48BB00D5AEC3 /* main.m in Sources */,
 				1EEDD06A13DD48BB00D5AEC3 /* TestAppAppDelegate.m in Sources */,
+				30DE54631507A9B300C06806 /* Multiplier.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -716,6 +732,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				30DE54641507CCB200C06806 /* Multiplier.m in Sources */,
 				1EEDD07E13DD48D800D5AEC3 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -738,6 +755,7 @@
 				300687CC14EA62B2006E8070 /* XPCMessage.m in Sources */,
 				30DF8D5714EBC03900E5E876 /* XPCMessage+XPCKitInternal.m in Sources */,
 				30E9DAFB14ED0B220070A6A4 /* SBUtilities.m in Sources */,
+				30DE545D150790C200C06806 /* XPCUtilities.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

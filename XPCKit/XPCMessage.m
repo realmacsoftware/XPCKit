@@ -91,6 +91,15 @@
 }
 
 
+// Returns a message that is suited for invocation
+
++ (id)messageWithSelector:(SEL)inSelector target:(id)inTarget object:(id)inObject
+{
+    return [[XPCMessage alloc] initWithSelector:inSelector target:inTarget object:inObject];
+}
+
+
+
 // First designated initializer
 
 - (id)initWithXPCDictionary:(xpc_object_t)inXPCDictionary
@@ -123,13 +132,12 @@
 
 // Second designated initializer:
 //
-// Returns an empty (reply)message based on a message supposedly coming from the wire.
-// If that incoming message was sent through -sentMessage:withReply: the returned message
+// Initialize a message that is supposed to be the reply to inOriginalMessage coming from the wire.
+// If the incoming message was sent through -sendMessage:withReply: the returned message
 // will be setup for being sent to the incoming message's reply handler.
 // Otherwise, this method will simply return an empty message (that will be routed
 // to a generic event handler).
-// Initialize a message that is supposed to be the reply to inOriginalMessage.
-// See xpc_dictionary_create_reply() for details.
+// See also xpc_dictionary_create_reply().
 
 - (id)initReplyForMessage:(XPCMessage *)inOriginalMessage
 {
@@ -139,6 +147,19 @@
         } else {
             return [self init];
         }
+}
+
+
+
+// Initialize a message that is suited for invocation
+
+- (id)initWithSelector:(SEL)inSelector target:(id)inTarget object:(id)inObject
+{
+    return [self initWithObjectsAndKeys:
+            inTarget,   @"target",
+            NSStringFromSelector(inSelector), @"selector",
+            inObject,   @"object1",
+            nil];
 }
 
 
@@ -340,6 +361,39 @@
 - (void) setInteger:(NSInteger)inValue forKey:(NSString *)inKey
 {
     [self setObject:[NSNumber numberWithInteger:inValue] forKey:inKey];
+}
+
+
+#pragma mark - Invocation
+
+// Returns whether this message is invocable
+// (i.e. contains target and selector and optionally an argument object)
+
+- (BOOL) invocable
+{
+    return (NSSelectorFromString([self objectForKey:@"selector"]) && [self objectForKey:@"target"]);
+}
+
+
+- (XPCMessage *) invoke
+{
+    SEL selector = NSSelectorFromString([self objectForKey:@"selector"]);
+    id target = [self objectForKey:@"target"];
+    id object = [self objectForKey:@"object1"];
+    
+    if (selector && target)
+    {
+        XPCMessage *reply = [XPCMessage messageReplyForMessage:self];
+        
+        NSError* error = nil;
+        id result = [target performSelector:selector withObject:object withObject:(id)&error];
+        
+        if (result) [reply setObject:result forKey:@"result"];
+        if (error) [reply setObject:error forKey:@"error"];
+
+        return reply;
+    }
+    return nil;
 }
 
 

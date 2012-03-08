@@ -165,6 +165,25 @@
 }
 
 
+-(void)sendSelector:(SEL)inSelector withTarget:(id)inTarget object:(id)inObject returnValueHandler:(XPCReturnValueHandler)inReturnHandler
+{
+    XPCMessage* message = [XPCMessage messageWithSelector:inSelector target:inTarget object:inObject];
+    
+    [self sendMessage:message withReply:^(XPCMessage* inReply)
+     {
+         NSError *error = nil;
+         id returnValue = [inReply invocationReturnValue:&error];
+         inReturnHandler(returnValue, error);           // Handle method-level errors here
+         [inReturnHandler release];
+     }
+                 errorHandler:^(NSError* inError)       // Handle connection-level errors here
+     {
+         inReturnHandler(nil, inError);
+         [inReturnHandler release];
+     }];
+}
+
+
 -(NSString *)connectionName{
 	__block char* name = NULL; 
 	dispatch_sync(self.dispatchQueue, ^{

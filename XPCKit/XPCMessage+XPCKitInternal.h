@@ -25,5 +25,6 @@
 - (xpc_object_t) XPCDictionary;
 - (BOOL) needsDirectReply;
 - (void) setNeedsDirectReply:(BOOL)inDirectReply;
+- (id) invocationReturnValue:(NSError **)outError;
 
 @end

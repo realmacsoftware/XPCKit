@@ -44,6 +44,7 @@
 -(void)sendMessage:(XPCMessage *)message;
 -(void)sendMessage:(XPCMessage *)message withReply:(XPCReplyHandler)replyHandler;
 -(void)sendMessage:(XPCMessage *)message withReply:(XPCReplyHandler)replyHandler errorHandler:(XPCErrorHandler)errorHandler;
+-(void)sendSelector:(SEL)inSelector withTarget:(id)inTarget object:(id)inObject returnValueHandler:(XPCReturnValueHandler)inReturnHandler;
 
 -(void)suspend;
 -(void)resume;

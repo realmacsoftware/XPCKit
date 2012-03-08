@@ -39,11 +39,14 @@ extern const char *XPCMessageErrorKey;
 + (id)messageWithObjects:(NSArray *)inObjects forKeys:(NSArray *)inKeys;
 + (id)messageWithObject:(id)inObject forKey:(NSString *)inKey;
 + (id)messageWithObjectsAndKeys:(id)firstObject, ... NS_REQUIRES_NIL_TERMINATION;
++ (id)messageWithSelector:(SEL)inSelector target:(id)inTarget object:(id)inObject;
+
 - (id)initWithXPCDictionary:(xpc_object_t)inXPCDictionary;
 - (id)initReplyForMessage:(XPCMessage *)inOriginalMessage;
 - (id)initWithObjects:(NSArray *)inObjects forKeys:(NSArray *)inKeys;
 - (id)initWithObject:(id)inObject forKey:(NSString *)inKey;
 - (id)initWithObjectsAndKeys:(id)firstObject, ... NS_REQUIRES_NIL_TERMINATION;
+- (id)initWithSelector:(SEL)inSelector target:(id)inTarget object:(id)inObject;
 
 - (id)objectForKey:(NSString *)inKey;
 
@@ -66,4 +69,12 @@ extern const char *XPCMessageErrorKey;
 - (void) setFloat:(float)inValue forKey:(NSString *)inKey;
 - (void) setInteger:(NSInteger)inValue forKey:(NSString *)inKey;
 
+// Invocation
+
+// Returns whether this message is invocable
+// (i.e. contains target and selector and optionally an argument object)
+
+- (BOOL) invocable;
+
+- (XPCMessage *) invoke;
 @end
