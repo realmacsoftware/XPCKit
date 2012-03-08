@@ -5,7 +5,7 @@
 * Supports messages associated with a specific reply handler (like `xpc_connection_send_message_with_reply`)
 * Supports messages containing objects conforming to the NSCoding protocol
 
-**This fork is not api-compatible with its origin.**
+**This fork is not API-compatible with its origin and its API is still in flux**
 
 *****
 
