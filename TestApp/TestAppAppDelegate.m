@@ -145,11 +145,12 @@
     [crashConnection sendMessage:message withReply:^(XPCMessage *inMessage) {
         // Empty reply handler since we are crashing the XPC service to test error handling
     } errorHandler:^(NSError *inError) {
-        NSLog(@"XPC service successfuly crashed with description: %@", [inError localizedDescription]);
+        NSLog(@"XPC service successfully crashed with description: %@", [inError localizedDescription]);
     }];
 
     
 	[mathConnection sendMessage:[XPCMessage messageWithObject:@"whatTimeIsIt" forKey:@"operation"]];
+    
 }
 
 @end
