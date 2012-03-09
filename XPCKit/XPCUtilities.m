@@ -27,7 +27,7 @@
 // When XPCConnection is nil (e.g. running on Snow Leopard) message will be dispatched asynchronously via GCD.
 
 void XPCPerformSelectorAsync(XPCConnection *inConnection,
-                                   SEL inSelector, id inTarget, id inObject,
+                                   id inTarget, SEL inSelector, id inObject,
                                    XPCReturnValueHandler inReturnHandler)
 {
     // If we are running sandboxed on Lion (or newer), then send a request to perform selector on target to our XPC

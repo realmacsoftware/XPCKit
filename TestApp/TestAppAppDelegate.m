@@ -106,8 +106,8 @@
     
     Multiplier *multiplier = [[Multiplier alloc] initWithValues:values];
     
-//    XPCMsgDispatchAsyncWithObject(nil, @selector(multiply), multiplier, nil,      // With nil connection it will use GCD
-    XPCPerformSelectorAsync(mathConnection, @selector(multiply), multiplier, nil,
+//    XPCMsgDispatchAsyncWithObject(nil, multiplier, @selector(multiply), nil,      // With nil connection it will use GCD
+    XPCPerformSelectorAsync(mathConnection, multiplier, @selector(multiply), nil,
                                   ^(id product, NSError *error) {
                                       if (error) {
                                           NSLog(@"Oops! we got an error: %@", [error localizedDescription]);

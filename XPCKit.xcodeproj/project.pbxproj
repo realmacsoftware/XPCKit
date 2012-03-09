@@ -87,7 +87,7 @@
 		30DE545E150790C200C06806 /* XPCUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 30DE545C150790C200C06806 /* XPCUtilities.m */; };
 		30DE54631507A9B300C06806 /* Multiplier.m in Sources */ = {isa = PBXBuildFile; fileRef = 30DE54621507A9B300C06806 /* Multiplier.m */; };
 		30DE54641507CCB200C06806 /* Multiplier.m in Sources */ = {isa = PBXBuildFile; fileRef = 30DE54621507A9B300C06806 /* Multiplier.m */; };
-		30DE54661508EFD200C06806 /* XPCUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 30DE54651508EFD200C06806 /* XPCUtilities.h */; };
+		30DE54661508EFD200C06806 /* XPCUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 30DE54651508EFD200C06806 /* XPCUtilities.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		30DF8D5514EBC03900E5E876 /* XPCMessage+XPCKitInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 30DF8D5314EBC03900E5E876 /* XPCMessage+XPCKitInternal.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		30DF8D5614EBC03900E5E876 /* XPCMessage+XPCKitInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 30DF8D5314EBC03900E5E876 /* XPCMessage+XPCKitInternal.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		30DF8D5714EBC03900E5E876 /* XPCMessage+XPCKitInternal.m in Sources */ = {isa = PBXBuildFile; fileRef = 30DF8D5414EBC03900E5E876 /* XPCMessage+XPCKitInternal.m */; };
@@ -500,8 +500,8 @@
 				1EEDD0F113DEB97000D5AEC3 /* XPCUUID.h in Headers */,
 				1EB022A5141D9F3700BCC1FB /* NSDate+XPCParse.h in Headers */,
 				30E9DAF914ED0B220070A6A4 /* SBUtilities.h in Headers */,
-				30DF8D5514EBC03900E5E876 /* XPCMessage+XPCKitInternal.h in Headers */,
 				30DE54661508EFD200C06806 /* XPCUtilities.h in Headers */,
+				30DF8D5514EBC03900E5E876 /* XPCMessage+XPCKitInternal.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
