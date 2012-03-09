@@ -20,10 +20,10 @@
 #import <Foundation/Foundation.h>
 
 #import <xpc/xpc.h>
-#import "XPCExtensions.h"
-#import "XPCTypes.h"
+#import <XPCKit/XPCExtensions.h>
+#import <XPCKit/XPCTypes.h>
 
-#import "XPCConnection.h"
-#import "XPCService.h"
-#import "XPCMessage.h"
-#import "XPCUtilities.h"
+#import <XPCKit/XPCConnection.h>
+#import <XPCKit/XPCService.h>
+#import <XPCKit/XPCMessage.h>
+#import <XPCKit/XPCUtilities.h>
