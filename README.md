@@ -4,6 +4,8 @@
 
 * Supports messages associated with a specific reply handler (like `xpc_connection_send_message_with_reply`)
 * Supports messages containing objects conforming to the NSCoding protocol
+* Supports sending a message to an object once it reached the other process
+* Supports environment agnostic (XPC/non-XPC) message dispatching (very convenient if you plan to run on OS X 10.6 (though 10.6 API compatiblity not tested yet))
 
 **This fork is not API-compatible with its origin and its API is still in flux**
 
