@@ -26,6 +26,6 @@
 //     (i.e. target and object must conform to NSCoding when connection is not nil).
 // When XPCConnection is nil (e.g. running on Snow Leopard) message will be dispatched asynchronously via GCD.
 
-void XPCMsgDispatchAsyncWithObject(XPCConnection *inConnection,
+void XPCPerformSelectorAsync(XPCConnection *inConnection,
                                                 SEL inSelector, id inTarget, id inObject,
                                                 XPCReturnValueHandler inCompletionHandler);

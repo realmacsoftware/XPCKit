@@ -26,14 +26,10 @@
 //     (i.e. target and object must conform to NSCoding when connection is not nil).
 // When XPCConnection is nil (e.g. running on Snow Leopard) message will be dispatched asynchronously via GCD.
 
-void XPCMsgDispatchAsyncWithObject(XPCConnection *inConnection,
+void XPCPerformSelectorAsync(XPCConnection *inConnection,
                                    SEL inSelector, id inTarget, id inObject,
                                    XPCReturnValueHandler inReturnHandler)
 {
-    // Copy completion handler onto the heap to make it stick around until we need it...
-    
-    XPCReturnValueHandler returnHandler = [inReturnHandler copy];
-    
     // If we are running sandboxed on Lion (or newer), then send a request to perform selector on target to our XPC
     // service and hand the results to the supplied completion block...
     
