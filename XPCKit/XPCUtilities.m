@@ -47,6 +47,10 @@ void XPCPerformSelectorAsync(XPCConnection *inConnection,
     
     else
     {
+        // Copy return value handler onto the heap to make it stick around until we need it...
+        
+        XPCReturnValueHandler returnHandler = [inReturnHandler copy];
+        
         dispatch_queue_t currentQueue = dispatch_get_current_queue();
         dispatch_retain(currentQueue);
         
@@ -57,7 +61,7 @@ void XPCPerformSelectorAsync(XPCConnection *inConnection,
                            
                            dispatch_async(currentQueue,^()
                                           {
-                                              inReturnHandler(result, error);
+                                              returnHandler(result, error);
                                               [returnHandler release];
                                               dispatch_release(currentQueue);
                                           });

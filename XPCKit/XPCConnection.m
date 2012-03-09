@@ -167,19 +167,23 @@
 
 -(void)sendSelector:(SEL)inSelector withTarget:(id)inTarget object:(id)inObject returnValueHandler:(XPCReturnValueHandler)inReturnHandler
 {
+    // Copy return value handler onto the heap to make it stick around until we need it...
+    
+    XPCReturnValueHandler returnHandler = [inReturnHandler copy];
+    
     XPCMessage* message = [XPCMessage messageWithSelector:inSelector target:inTarget object:inObject];
     
     [self sendMessage:message withReply:^(XPCMessage* inReply)
      {
          NSError *error = nil;
          id returnValue = [inReply invocationReturnValue:&error];
-         inReturnHandler(returnValue, error);           // Handle method-level errors here
-         [inReturnHandler release];
+         returnHandler(returnValue, error);             // Handle method-level errors here
+         [returnHandler release];
      }
                  errorHandler:^(NSError* inError)       // Handle connection-level errors here
      {
-         inReturnHandler(nil, inError);
-         [inReturnHandler release];
+         returnHandler(nil, inError);
+         [returnHandler release];
      }];
 }
 
