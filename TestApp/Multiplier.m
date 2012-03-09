@@ -54,11 +54,20 @@
 
 #pragma mark - Do thy work
 
-- (NSNumber *) multiply
+- (NSNumber *) multiply:(NSError **)outError
 {
     double result = 1.0;
     for (NSNumber *value in _values)
     {
+        if (![value isKindOfClass:[NSNumber class]])
+        {
+            NSInteger errorCode = 0;
+            NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+            NSString *localizedDescription = [NSString stringWithFormat:@"Cannot multiply with object of type %@", [value className]];
+            [userInfo setValue:localizedDescription forKey:NSLocalizedDescriptionKey];
+
+            *outError = [NSError errorWithDomain:@"TestAppErrorDomain" code:errorCode userInfo:userInfo];
+        }
         result = result * [value doubleValue];
     }
     return [NSNumber numberWithDouble:result];

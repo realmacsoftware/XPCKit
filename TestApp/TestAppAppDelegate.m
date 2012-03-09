@@ -102,15 +102,16 @@
     NSArray * values = [NSArray arrayWithObjects:
                         [NSNumber numberWithInt:14],
                         [NSNumber numberWithInt:7],
+//                        @"abc",                                   // Uncomment this line if you want to test error use case   
                         [NSNumber numberWithDouble: 1.67], nil];
     
     Multiplier *multiplier = [[Multiplier alloc] initWithValues:values];
     
-//    XPCMsgDispatchAsyncWithObject(nil, multiplier, @selector(multiply), nil,      // With nil connection it will use GCD
-    XPCPerformSelectorAsync(mathConnection, multiplier, @selector(multiply), nil,
+//    XPCMsgDispatchAsyncWithObject(nil, multiplier, @selector(multiply), nil,         // With nil connection it will use GCD
+    XPCPerformSelectorAsync(mathConnection, multiplier, @selector(multiply:), nil,
                                   ^(id product, NSError *error) {
                                       if (error) {
-                                          NSLog(@"Oops! we got an error: %@", [error localizedDescription]);
+                                          NSLog(@"Multiplier-Oops! we got an error: %@", [error localizedDescription]);
                                       } else {
                                           NSLog(@"I asked for multiplying some numbers and got back: %@", product);
                                       }

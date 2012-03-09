@@ -57,7 +57,13 @@ void XPCPerformSelectorAsync(XPCConnection *inConnection,
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT,0),^()
                        {
                            NSError* error = nil;
-                           id result = [inTarget performSelector:inSelector withObject:inObject withObject:(id)&error];
+                           id result = nil;
+                           
+                           if (inObject) {
+                               result = [inTarget performSelector:inSelector withObject:inObject withObject:(id)&error];
+                           } else {
+                               result = [inTarget performSelector:inSelector withObject:(id)&error];
+                           }
                            
                            dispatch_async(currentQueue,^()
                                           {

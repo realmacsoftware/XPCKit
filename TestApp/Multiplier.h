@@ -14,5 +14,5 @@
 }
 
 - (id)initWithValues:(NSArray *)inValues;
-- (NSNumber *) multiply;
+- (NSNumber *) multiply:(NSError **)outError;
 @end

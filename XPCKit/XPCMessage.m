@@ -386,7 +386,13 @@
         XPCMessage *reply = [XPCMessage messageReplyForMessage:self];
         
         NSError* error = nil;
-        id result = [target performSelector:selector withObject:object withObject:(id)&error];
+        id result = nil;
+        
+        if (object) {
+            result = [target performSelector:selector withObject:object withObject:(id)&error];
+        } else {
+            result = [target performSelector:selector withObject:(id)&error];
+        }
         
         if (result) [reply setObject:result forKey:@"result"];
         if (error) [reply setObject:error forKey:@"error"];
