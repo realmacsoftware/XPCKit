@@ -23,6 +23,7 @@
 #import "NSObject+XPCParse.h"
 #import "NSDictionary+XPCParse.h"
 
+#define XPCLogMessages 1
 #define XPCSendLogMessages 1
 
 @implementation XPCConnection
@@ -109,12 +110,10 @@
 
 -(void)sendMessage:(XPCMessage *)inMessage
 {
-    if (![inMessage isKindOfClass:[XPCMessage class]]) {
-        // TODO: setting an arbitrary key is probably not a good idea here
-        inMessage = [XPCMessage messageWithObject:inMessage forKey:@"contents"];
-    }
+#if XPCLogMessages
     NSLog(@"Sending message %@", inMessage);
-
+#endif
+    
 	dispatch_async(self.dispatchQueue, ^{
         xpc_connection_send_message(_connection, inMessage.XPCDictionary);
 	});
@@ -132,7 +131,10 @@
     // Need to tell message that we want a direct reply
     [inMessage setNeedsDirectReply:YES];
     
+#if XPCLogMessages
     NSLog(@"Sending message %@", inMessage);
+#endif
+    
 	dispatch_async(self.dispatchQueue, ^{
         xpc_connection_send_message_with_reply(_connection, inMessage.XPCDictionary, dispatch_get_main_queue(), ^(xpc_object_t event) {
             
