@@ -168,7 +168,7 @@
     if ((self = [self init]))
     {
         id object = nil;
-        NSString *key = nil;
+        id key = nil;
         
         if ([inObjects count] != [inKeys count]) {
             [NSException raise:NSInvalidArgumentException format:@"Objects and keys don't match in numbers"];
@@ -177,10 +177,13 @@
         {
             object = [inObjects objectAtIndex:i];
             
-            // TODO: Ensure that we indeed got NSString kind of objects here
-            key = (NSString *)[inKeys objectAtIndex:i];
+            if ([(key = [inKeys objectAtIndex:i]) isKindOfClass:[NSString class]])
+            {
+                [self setObject:object forKey:key];
+            } else {
+                [NSException raise:NSInvalidArgumentException format:@"Trying to initialize %@ with %@ key. Key must be of NSString", [self className], key];
+            }
             
-            [self setObject:object forKey:key];
         }
     }
     return self;
