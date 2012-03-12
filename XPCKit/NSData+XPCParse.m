@@ -47,7 +47,6 @@
 {
     id object = nil;
     
-    //TODO: Is there a better way to test whether some NSData is an archived object?
     @try {
         object = [NSKeyedUnarchiver unarchiveObjectWithData:[NSData dataWithXPCObject:xpcObject]];
     }

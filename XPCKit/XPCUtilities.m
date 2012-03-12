@@ -31,7 +31,7 @@ void XPCPerformSelectorAsync(XPCConnection *inConnection,
                                    XPCReturnValueHandler inReturnHandler)
 {
     // If we are running sandboxed on Lion (or newer), then send a request to perform selector on target to our XPC
-    // service and hand the results to the supplied completion block...
+    // service and hand the results to the supplied return handler block...
     
     if (inConnection)
     {
@@ -42,8 +42,7 @@ void XPCPerformSelectorAsync(XPCConnection *inConnection,
     }
     
     // If we are not sandboxed (e.g. running on Snow Leopard) we'll just do the work directly (but asynchronously)
-    // via GCD queues. Once again the result is handed over to the completion block...
-    // Note that we never call the error handler here since we can't have connection-level errors
+    // via GCD queues. Once again the result is handed over to the return handler block...
     
     else
     {
