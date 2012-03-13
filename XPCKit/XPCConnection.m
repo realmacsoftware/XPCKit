@@ -139,7 +139,7 @@
 #endif
     
 	dispatch_async(self.dispatchQueue, ^{
-        xpc_connection_send_message_with_reply(_connection, inMessage.XPCDictionary, dispatch_get_main_queue(), ^(xpc_object_t event) {
+        xpc_connection_send_message_with_reply(_connection, inMessage.XPCDictionary, self.dispatchQueue, ^(xpc_object_t event) {
             
             xpc_type_t type = xpc_get_type(event);
 
