@@ -123,11 +123,19 @@
 }
 
 
+// Sends a message to the associated connection in the XPC service and invokes the reply handler
+// on the dispatch queue of self once the associated connection sends a reply.
+// Logs an error message to the console if the connection does not reply for whatever reasons.
+
 -(void)sendMessage:(XPCMessage *)inMessage withReply:(XPCReplyHandler)replyHandler
 {
     [self sendMessage:inMessage withReply:replyHandler errorHandler:nil];
 }
 
+
+// Sends a message to the associated connection in the XPC service and invokes the reply handler
+// on the dispatch queue of self once the associated connection sends a reply.
+// Invokes the error handler if the associated connection does not reply for whatever reasons.
 
 -(void)sendMessage:(XPCMessage *)inMessage withReply:(XPCReplyHandler)replyHandler errorHandler:(XPCErrorHandler)errorHandler
 {
@@ -169,6 +177,11 @@
 	});
 }
 
+
+// Sends a selector and a target and an optional object argument to the associated connection in the XPC service
+// which will invoke the selector on the (copied) target with the optional (copied) argument. Invokes the
+// return value handler on the dispatch queue of self with the (copied) return value and possibly
+// a (copied) error object supplied.
 
 -(void)sendSelector:(SEL)inSelector withTarget:(id)inTarget object:(id)inObject returnValueHandler:(XPCReturnValueHandler)inReturnHandler
 {
