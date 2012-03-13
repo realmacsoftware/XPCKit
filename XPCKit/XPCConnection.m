@@ -79,10 +79,13 @@
 	xpc_connection_set_target_queue(self.connection, self.dispatchQueue);
 }
 
--(void)receiveConnection:(xpc_connection_t)connection{
+-(void)receiveConnection:(xpc_connection_t)connection
+{
     __block XPCConnection *this = self;
-    __block XPCMessage *message = nil;
-    xpc_connection_set_event_handler(connection, ^(xpc_object_t object){
+    
+    xpc_connection_set_event_handler(connection, ^(xpc_object_t object) {
+        XPCMessage *message = nil;
+        
         if (object == XPC_ERROR_CONNECTION_INTERRUPTED ||
             object == XPC_ERROR_CONNECTION_INVALID ||
             object == XPC_ERROR_KEY_DESCRIPTION ||
