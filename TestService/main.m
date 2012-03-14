@@ -20,17 +20,27 @@
 #import <Foundation/Foundation.h>
 #import <xpc/xpc.h>
 #import "XPCKit.h"
-#import "SBUtilities.h"
 #import "Multiplier.h"
 
-void ensureTestFile(void);
 
 static NSString *testFilePath;
 static const NSString *testFileContent = @"\nHere's to the crazy sandbox creators\nThe misfits, the rebels";
 
 
+// Replacement function for NSHomeDirectory...
+
+NSString* homeDirectory(void);
+NSString* homeDirectory()
+{
+	struct passwd* passInfo = getpwuid(getuid());
+	char* homeDir = passInfo->pw_dir;
+	return [NSString stringWithUTF8String:homeDir];
+}
+
+
 // Create a file to test with that is out of the app's sandbox
 
+void ensureTestFile(void);
 void ensureTestFile()
 {
     NSFileManager *fm = [[NSFileManager alloc] init];
@@ -50,7 +60,7 @@ int main(int argc, const char *argv[])
 {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     
-    testFilePath = [SBHomeDirectory() stringByAppendingString:@"/XPCKit - you may delete this test file.txt"];
+    testFilePath = [homeDirectory() stringByAppendingString:@"/XPCKit - you may delete this test file.txt"];
     
 	[XPCService runServiceWithConnectionHandler:^(XPCConnection *connection){
 		[connection sendLog:@"TestService received a connection"];

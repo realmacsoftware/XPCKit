@@ -20,7 +20,6 @@
 #import "TestAppAppDelegate.h"
 #import <xpc/xpc.h>
 #import <dispatch/dispatch.h>
-#import "SBUtilities.h"
 #import "Multiplier.h"
 
 @implementation TestAppAppDelegate
