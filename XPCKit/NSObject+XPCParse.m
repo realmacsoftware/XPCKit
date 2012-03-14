@@ -60,6 +60,10 @@
     {
         NSData *data = [NSKeyedArchiver archivedDataWithRootObject:self];
         return xpc_data_create([data bytes], [data length]);
+    } else {
+        // There is no way to convert self into an xpc_object_t object
+        
+        [NSException raise:@"XPCNotNSCodingConformantException" format:@"Object %@ is not convertible into xpc_object_t type because it is not NSCoding conformant", self];
     }
     return NULL;
 }
