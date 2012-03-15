@@ -21,6 +21,7 @@
 #import <xpc/xpc.h>
 #import "XPCKit.h"
 #import "Multiplier.h"
+#import <pwd.h>
 
 
 static NSString *testFilePath;
