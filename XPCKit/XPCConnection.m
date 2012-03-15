@@ -146,9 +146,13 @@
     NSLog(@"Sending message %@", inMessage);
 #endif
     
+    dispatch_queue_t currentQueue = dispatch_get_current_queue();
+    dispatch_retain(currentQueue);
+    
 	dispatch_async(self.dispatchQueue, ^{
-        xpc_connection_send_message_with_reply(_connection, inMessage.XPCDictionary, self.dispatchQueue, ^(xpc_object_t event) {
-            
+        xpc_connection_send_message_with_reply(_connection, inMessage.XPCDictionary, currentQueue,
+                                               ^(xpc_object_t event)
+        {
             xpc_type_t type = xpc_get_type(event);
 
             if (type == XPC_TYPE_ERROR)
@@ -173,6 +177,7 @@
                 XPCMessage *replyMessage = [XPCMessage messageWithXPCDictionary:event];
                 replyHandler(replyMessage);
             }
+            dispatch_release(currentQueue);
         });
 	});
 }

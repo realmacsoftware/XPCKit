@@ -46,8 +46,6 @@ void XPCPerformSelectorAsync(XPCConnection *inConnection,
     
     else
     {
-        // Copy return value handler onto the heap to make it stick around until we need it...
-        
         dispatch_queue_t currentQueue = dispatch_get_current_queue();
         dispatch_retain(currentQueue);
         
