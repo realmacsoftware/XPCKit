@@ -22,6 +22,7 @@
 #import <xpc/xpc.h>
 #import "NSObject+XPCParse.h"
 #import "NSDictionary+XPCParse.h"
+#import "XPCUtilities.h"
 
 #define XPCLogMessages 1
 #define XPCSendLogMessages 1
@@ -96,6 +97,9 @@
             message = [XPCMessage messageWithXPCDictionary:errorDict];
         }else{
             message = [XPCMessage messageWithXPCDictionary:object];
+            
+            // Pick up log level that was sent accross the wire
+            XPCSetLogLevel([message logLevel]);
 		}	
 #if XPCSendLogMessages
         if([message objectForKey:@"XPCDebugLog"]){
@@ -113,13 +117,7 @@
 
 -(void)sendMessage:(XPCMessage *)inMessage
 {
-#if XPCLogMessages
-    NSLog(@"Sending message %@", inMessage);
-#endif
-    
-	dispatch_async(self.dispatchQueue, ^{
-        xpc_connection_send_message(_connection, inMessage.XPCDictionary);
-	});
+    [self sendMessage:inMessage withReply:nil errorHandler:nil];
 }
 
 
@@ -137,49 +135,59 @@
 // on the dispatch queue of self once the associated connection sends a reply.
 // Invokes the error handler if the associated connection does not reply for whatever reasons.
 
--(void)sendMessage:(XPCMessage *)inMessage withReply:(XPCReplyHandler)replyHandler errorHandler:(XPCErrorHandler)errorHandler
+-(void)sendMessage:(XPCMessage *)inMessage
+         withReply:(XPCReplyHandler)replyHandler
+      errorHandler:(XPCErrorHandler)errorHandler
 {
-    // Need to tell message that we want a direct reply
-    [inMessage setNeedsDirectReply:YES];
+    // Whenever sending a message we also send the current log level
+    // so the XPC service can set its log level accordingly
     
+    [inMessage setLogLevel:XPCGetLogLevel()];
 #if XPCLogMessages
-    NSLog(@"Sending message %@", inMessage);
+    XPCLogAll(@"Sending message %@", inMessage);
 #endif
     
-    dispatch_queue_t currentQueue = dispatch_get_current_queue();
-    dispatch_retain(currentQueue);
-    
-	dispatch_async(self.dispatchQueue, ^{
-        xpc_connection_send_message_with_reply(_connection, inMessage.XPCDictionary, currentQueue,
-                                               ^(xpc_object_t event)
-        {
-            xpc_type_t type = xpc_get_type(event);
-
-            if (type == XPC_TYPE_ERROR)
-            {
-                if (errorHandler) {
-                    errorHandler([XPCMessage errorForXPCObject:event]);
-                } else {
-                    if (event == XPC_ERROR_CONNECTION_INVALID) {
-                        // The process on the other end of the connection has either
-                        // crashed or cancelled the connection. After receiving this error,
-                        // the connection is in an invalid state, and you do not need to
-                        // call xpc_connection_cancel(). Just tear down any associated state
-                        // here.
-                        NSLog(@"Connection is invalid");
-                    } else if (event == XPC_ERROR_CONNECTION_INTERRUPTED) {
-                        // Handle per-connection termination cleanup.
-                        NSLog(@"Connection was interrupted");
-                    }
-                }
-            } else {
-                assert(type == XPC_TYPE_DICTIONARY);
-                XPCMessage *replyMessage = [XPCMessage messageWithXPCDictionary:event];
-                replyHandler(replyMessage);
-            }
-            dispatch_release(currentQueue);
+    if (!replyHandler) {
+        dispatch_async(self.dispatchQueue, ^{
+            xpc_connection_send_message(_connection, inMessage.XPCDictionary);
         });
-	});
+    } else {
+        // Need to tell message that we want a direct reply
+        [inMessage setNeedsDirectReply:YES];
+        
+        dispatch_queue_t currentQueue = dispatch_get_current_queue();
+        dispatch_retain(currentQueue);
+        
+        dispatch_async(self.dispatchQueue, ^{
+            xpc_connection_send_message_with_reply(_connection, inMessage.XPCDictionary, currentQueue, ^(xpc_object_t event){
+                xpc_type_t type = xpc_get_type(event);
+                
+                if (type == XPC_TYPE_ERROR)
+                {
+                    if (errorHandler) {
+                        errorHandler([XPCMessage errorForXPCObject:event]);
+                    } else {
+                        if (event == XPC_ERROR_CONNECTION_INVALID) {
+                            // The process on the other end of the connection has either
+                            // crashed or cancelled the connection. After receiving this error,
+                            // the connection is in an invalid state, and you do not need to
+                            // call xpc_connection_cancel(). Just tear down any associated state
+                            // here.
+                            XPCLogError(@"Connection is invalid");
+                        } else if (event == XPC_ERROR_CONNECTION_INTERRUPTED) {
+                            // Handle per-connection termination cleanup.
+                            XPCLogError(@"Connection was interrupted");
+                        }
+                    }
+                } else {
+                    assert(type == XPC_TYPE_DICTIONARY);
+                    XPCMessage *replyMessage = [XPCMessage messageWithXPCDictionary:event];
+                    replyHandler(replyMessage);
+                }
+                dispatch_release(currentQueue);
+            });
+        });
+    }
 }
 
 
@@ -264,6 +272,19 @@
 		xpc_connection_resume(_connection);
 	});
 }
+
+#pragma mark - Miscellaneous
+
+-(NSString *) description
+{
+    return [NSString stringWithFormat:@"<%@(%@, %@, %@, %@)>",
+            [self className],
+            [self connectionName],
+            [self connectionProcessID],
+            [self connectionEUID],
+            [self connectionEGID]];
+}
+
 
 -(void)sendLog:(NSString *)string{
 #if XPCSendLogMessages

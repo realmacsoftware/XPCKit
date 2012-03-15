@@ -22,9 +22,19 @@
 #import <dispatch/dispatch.h>
 #import "Multiplier.h"
 
+// Define a log level to your liking here
+
+#define XPC_LOG_LEVEL XPCLogLevelAll
+
 @implementation TestAppAppDelegate
 
 @synthesize window;
+
++ (void)initialize
+{
+    XPCSetLogLevel(XPC_LOG_LEVEL);
+}
+
 
 // Returns an arbitrary file URL where we have access to that file.
 // This may serve as a container URL a document scoped bookmark is relative to.

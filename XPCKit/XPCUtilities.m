@@ -70,4 +70,19 @@ void XPCPerformSelectorAsync(XPCConnection *inConnection,
 }
 
 
+#pragma mark - Log Levels
+
+static XPCLogLevel sLogLevel = XPCLogLevelErrors;
+
+XPCLogLevel XPCGetLogLevel(void)
+{
+    return sLogLevel;
+}
+
+
+void XPCSetLogLevel(XPCLogLevel inLogLevel)
+{
+    sLogLevel = inLogLevel;
+}
+
 

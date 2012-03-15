@@ -18,6 +18,7 @@
 //
 
 #import "NSData+XPCParse.h"
+#import "XPCUtilities.h"
 
 @implementation NSData (XPCParse)
 
@@ -51,7 +52,7 @@
         object = [NSKeyedUnarchiver unarchiveObjectWithData:[NSData dataWithXPCObject:xpcObject]];
     }
     @catch (NSException *exception) {
-        NSLog(@"NSData object is not an object archive (this is not necessarily an error). Reason: %@", exception);
+        XPCLogWarning(@"NSData object is not an object archive (this is not necessarily an error). Reason: %@", exception);
     }
     @finally {
     }

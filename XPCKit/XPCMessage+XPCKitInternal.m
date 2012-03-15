@@ -20,6 +20,7 @@
 #import "XPCMessage+XPCKitInternal.h"
 
 #define XPC_DIRECT_REPLY_KEY @"__directReply"
+#define XPC_LOG_LEVEL_KEY  @"__logLevel"
 
 @implementation XPCMessage (XPCKitInternal)
 
@@ -61,6 +62,19 @@
 - (void) setNeedsDirectReply:(BOOL)inDirectReply
 {
     [self setObject:[NSNumber numberWithBool:inDirectReply] forKey:XPC_DIRECT_REPLY_KEY];
+}
+
+
+- (XPCLogLevel) logLevel
+{
+    NSNumber *logLevel = [self objectForKey:XPC_LOG_LEVEL_KEY];
+    return logLevel ? [logLevel unsignedIntValue] : XPCLogLevelErrors;
+}
+
+
+- (void) setLogLevel:(XPCLogLevel) inLogLevel
+{
+    [self setObject:[NSNumber numberWithUnsignedInt:inLogLevel] forKey:XPC_LOG_LEVEL_KEY];
 }
 
 

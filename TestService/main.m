@@ -22,6 +22,7 @@
 #import "XPCKit.h"
 #import "Multiplier.h"
 #import <pwd.h>
+#import "XPCUtilities.h"
 
 
 static NSString *testFilePath;
@@ -64,9 +65,15 @@ int main(int argc, const char *argv[])
     testFilePath = [homeDirectory() stringByAppendingString:@"/XPCKit - you may delete this test file.txt"];
     
 	[XPCService runServiceWithConnectionHandler:^(XPCConnection *connection){
-		[connection sendLog:@"TestService received a connection"];
-		[connection setEventHandler:^(XPCMessage *message, XPCConnection *connection){
-			[connection sendLog:[NSString stringWithFormat:@"TestService received a message! %@", message]];
+        NSString *text = [NSString stringWithFormat:@"TestService received connection %@", connection];
+		[connection sendLog:text];
+        
+		[connection setEventHandler:^(XPCMessage *message, XPCConnection *connection)
+        {
+            //[connection sendLog:[NSString stringWithFormat:@"Log level of service is: %d", XPCGetLogLevel()]];
+
+            NSString *text = [NSString stringWithFormat:@"TestService received a message! %@", message];
+			XPCSendLogAll(connection, text);
             
             // Got an invocable incoming message?
             

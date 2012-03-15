@@ -18,6 +18,7 @@
 //
 
 #import "XPCMessage.h"
+#import "XPCUtilities.h"
 
 @interface XPCMessage (XPCKitInternal)
 
@@ -25,6 +26,8 @@
 - (xpc_object_t) XPCDictionary;
 - (BOOL) needsDirectReply;
 - (void) setNeedsDirectReply:(BOOL)inDirectReply;
+- (XPCLogLevel) logLevel;
+- (void) setLogLevel:(XPCLogLevel) inLogLevel;
 - (id) invocationReturnValue:(NSError **)outError;
 
 @end
