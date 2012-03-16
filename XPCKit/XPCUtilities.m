@@ -46,6 +46,11 @@ void XPCPerformSelectorAsync(XPCConnection *inConnection,
     
     else
     {
+        // Copy target and object so they are dispatched under same premises as XPC (XPC uses archiving)
+        
+        id targetCopy = [NSKeyedUnarchiver unarchiveObjectWithData:[NSKeyedArchiver archivedDataWithRootObject:inTarget]];
+        id objectCopy = [NSKeyedUnarchiver unarchiveObjectWithData:[NSKeyedArchiver archivedDataWithRootObject:inObject]];
+        
         dispatch_queue_t currentQueue = dispatch_get_current_queue();
         dispatch_retain(currentQueue);
         
@@ -54,10 +59,10 @@ void XPCPerformSelectorAsync(XPCConnection *inConnection,
                            NSError* error = nil;
                            id result = nil;
                            
-                           if (inObject) {
-                               result = [inTarget performSelector:inSelector withObject:inObject withObject:(id)&error];
+                           if (objectCopy) {
+                               result = [targetCopy performSelector:inSelector withObject:objectCopy withObject:(id)&error];
                            } else {
-                               result = [inTarget performSelector:inSelector withObject:(id)&error];
+                               result = [targetCopy performSelector:inSelector withObject:(id)&error];
                            }
                            
                            dispatch_async(currentQueue,^()
