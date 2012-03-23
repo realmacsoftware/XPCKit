@@ -21,7 +21,9 @@
 #import <dispatch/dispatch.h>
 #import "XPCTypes.h"
 
-@interface XPCConnection : NSObject{
+@interface XPCConnection : NSObject
+{
+    XPCEventHandler _eventHandler;
     xpc_connection_t _connection;
 	dispatch_queue_t _dispatchQueue;
 }

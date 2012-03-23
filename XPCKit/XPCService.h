@@ -21,7 +21,10 @@
 #import "XPCTypes.h"
 #import "XPCConnection.h"
 
-@interface XPCService : NSObject
+@interface XPCService : NSObject {
+    XPCConnectionHandler connectionHandler;
+    NSArray *_connections;
+}
 
 @property (nonatomic, copy) XPCConnectionHandler connectionHandler;
 @property (nonatomic, readonly) NSArray *connections;
