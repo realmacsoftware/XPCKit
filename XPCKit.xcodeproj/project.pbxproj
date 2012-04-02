@@ -944,6 +944,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = TestService/TestService.entitlements;
+				CODE_SIGN_IDENTITY = "3rd Party Mac Developer Application";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TestService/TestService-Prefix.pch";
 				INFOPLIST_FILE = "TestService/TestService-Info.plist";
@@ -954,6 +955,7 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "com.mustacheware.$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = xpc;
 			};
 			name = Debug;
@@ -962,6 +964,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = TestService/TestService.entitlements;
+				CODE_SIGN_IDENTITY = "3rd Party Mac Developer Application";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TestService/TestService-Prefix.pch";
 				INFOPLIST_FILE = "TestService/TestService-Info.plist";
@@ -972,6 +975,7 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "com.mustacheware.$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = xpc;
 			};
 			name = Release;
