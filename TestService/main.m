@@ -24,6 +24,8 @@
 #import <pwd.h>
 #import "XPCUtilities.h"
 
+// Use document security scoped bookmarks or regular bookmarks
+#define SSB 0
 
 static NSString *testFilePath;
 static const NSString *testFileContent = @"\nHere's to the crazy sandbox creators\nThe misfits, the rebels";
@@ -125,15 +127,24 @@ int main(int argc, const char *argv[])
                 {
                     ensureTestFile();
                     
-                    NSURL *documentContainerURL = [message objectForKey:@"bookmarkContainerURL"];
                     NSError *error = nil;
                     
-                    NSURL *bookmarkURL = [[NSURL fileURLWithPath:testFilePath] fileReferenceURL];
-                    NSData *documentBookmark =
-                    [bookmarkURL bookmarkDataWithOptions:NSURLBookmarkCreationWithSecurityScope
-                          includingResourceValuesForKeys:nil
-                                           relativeToURL:documentContainerURL error:&error];
+                    NSURL *bookmarkURL = [NSURL fileURLWithPath:testFilePath];
+#if SSB
+                    NSURL *documentContainerURL = [message objectForKey:@"bookmarkContainerURL"];
                     
+                    NSData *documentBookmark =
+                    [bookmarkURL bookmarkDataWithOptions:NSURLBookmarkCreationWithSecurityScope | NSURLBookmarkCreationSecurityScopeAllowOnlyReadAccess
+                          includingResourceValuesForKeys:nil
+                                           relativeToURL:documentContainerURL
+                                                   error:&error];
+#else
+                    NSData *documentBookmark =
+                    [bookmarkURL bookmarkDataWithOptions:0
+                          includingResourceValuesForKeys:nil
+                                           relativeToURL:nil
+                                                   error:&error];
+#endif
                     [reply setObject:documentBookmark forKey:@"result"];
                 }
                 
@@ -145,7 +156,7 @@ int main(int argc, const char *argv[])
                     
                     // Crash me
                     NSArray *dummyArray = [NSArray array];
-                    [dummyArray objectAtIndex:10];
+//                    [dummyArray objectAtIndex:10];
                 }
                 
                 

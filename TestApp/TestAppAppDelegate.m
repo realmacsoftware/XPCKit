@@ -22,6 +22,9 @@
 #import <dispatch/dispatch.h>
 #import "Multiplier.h"
 
+// Use document security scoped bookmarks or regular bookmarks
+#define SSB 0
+
 // Define a log level to your liking here
 
 #define XPC_LOG_LEVEL XPCLogLevelAll
@@ -134,14 +137,21 @@
 	[readConnection sendMessage:message];
 	
     
-    // Resolve document scoped bookmark for test file from XPC service (file will be chosen by XPC service)
+    // Resolve bookmark for test file from XPC service (file will be chosen by XPC service)
 
+#if SSB
     // Need a straw man URL to serve as a "relative URL" for our document scoped bookmark
     NSURL *bookmarkContainerURL = [self URLForArbitraryAccessibleFile];
     
     message = [XPCMessage messageWithObjectsAndKeys:
                @"getDocumentBookmark", @"operation",
-               bookmarkContainerURL,   @"bookmarkContainerURL", nil];
+               bookmarkContainerURL,   @"bookmarkContainerURL",
+               nil];
+#else
+    message = [XPCMessage messageWithObjectsAndKeys:
+               @"getDocumentBookmark", @"operation",
+               nil];
+#endif
     
     [readConnection sendMessage:message withReply:
      ^(XPCMessage *inMessage)
@@ -153,12 +163,19 @@
         {
             NSError *error = nil;
             BOOL isStale = NO;
+#if SSB
             NSURL *URL = [NSURL URLByResolvingBookmarkData:result
                                                    options:NSURLBookmarkResolutionWithSecurityScope
                                              relativeToURL:bookmarkContainerURL
                                        bookmarkDataIsStale:&isStale
                                                      error:&error];
-            
+#else
+            NSURL *URL = [NSURL URLByResolvingBookmarkData:result
+                                                   options:0
+                                             relativeToURL:nil
+                                       bookmarkDataIsStale:&isStale
+                                                     error:&error];
+#endif
             [URL startAccessingSecurityScopedResource];
             
             NSString *fileContent = [NSString stringWithContentsOfURL:URL encoding:NSUTF8StringEncoding error:&error];
