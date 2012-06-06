@@ -136,8 +136,8 @@
 // Invokes the error handler if the associated connection does not reply for whatever reasons.
 
 -(void)sendMessage:(XPCMessage *)inMessage
-         withReply:(XPCReplyHandler)replyHandler
-      errorHandler:(XPCErrorHandler)errorHandler
+         withReply:(XPCReplyHandler)inReplyHandler
+      errorHandler:(XPCErrorHandler)inErrorHandler
 {
     // Whenever sending a message we also send the current log level
     // so the XPC service can set its log level accordingly
@@ -147,7 +147,7 @@
     XPCLogAll(@"Sending message %@", inMessage);
 #endif
     
-    if (!replyHandler) {
+    if (inReplyHandler == nil) {
         dispatch_async(self.dispatchQueue, ^{
             xpc_connection_send_message(_connection, inMessage.XPCDictionary);
         });
@@ -158,6 +158,9 @@
         dispatch_queue_t currentQueue = dispatch_get_current_queue();
         dispatch_retain(currentQueue);
         
+		XPCReplyHandler replyHandler = [inReplyHandler copy];
+		XPCErrorHandler errorHandler = [inErrorHandler copy];
+		
         dispatch_async(self.dispatchQueue, ^{
             xpc_connection_send_message_with_reply(_connection, inMessage.XPCDictionary, currentQueue, ^(xpc_object_t event){
                 xpc_type_t type = xpc_get_type(event);
@@ -184,6 +187,9 @@
                     XPCMessage *replyMessage = [XPCMessage messageWithXPCDictionary:event];
                     replyHandler(replyMessage);
                 }
+				
+				[replyHandler release];
+				[errorHandler release];
                 dispatch_release(currentQueue);
             });
         });
