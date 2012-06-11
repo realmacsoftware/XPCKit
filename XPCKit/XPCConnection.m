@@ -63,6 +63,10 @@
 		xpc_release(_connection);
 		_connection = NULL;
 	}
+    if(_eventHandler){
+        [_eventHandler release];
+        _eventHandler = nil;
+    }
 	
 	[super dealloc];
 }
@@ -107,8 +111,9 @@
             return;
         }
 #endif
+        // There are circumstances where self is already be deallocated at this point (and with it _eventHandler)
         
-        if(this.eventHandler){
+        if(this->_eventHandler){
             this.eventHandler(message, this);
         }
     });
