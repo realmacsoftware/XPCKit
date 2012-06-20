@@ -95,7 +95,7 @@
 
 + (id)messageWithSelector:(SEL)inSelector target:(id)inTarget object:(id)inObject
 {
-    return [[XPCMessage alloc] initWithSelector:inSelector target:inTarget object:inObject];
+    return [[[XPCMessage alloc] initWithSelector:inSelector target:inTarget object:inObject] autorelease];
 }
 
 

@@ -97,7 +97,7 @@
 }
 
 -(NSString *)string{
-	return [((NSString *)CFUUIDCreateString(NULL, self.uuidRef)) autorelease];
+	return [((NSString *)CFMakeCollectable(CFUUIDCreateString(NULL, self.uuidRef))) autorelease];
 }
 
 -(NSString *)description{

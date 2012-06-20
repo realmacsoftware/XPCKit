@@ -83,7 +83,7 @@
 - (id) invocationReturnValue:(NSError **)outError
 {
     id result = [self objectForKey:@"result"];
-    *outError = [self objectForKey:@"error"];
+    if (outError) *outError = [self objectForKey:@"error"];
     
     return result;
 }
