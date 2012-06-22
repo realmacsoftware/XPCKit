@@ -86,7 +86,7 @@
 
 -(void)receiveConnection:(xpc_connection_t)connection
 {
-    __block XPCConnection *this = self;
+//    __block XPCConnection *this = self;
     
     xpc_connection_set_event_handler(connection, ^(xpc_object_t object) {
         XPCMessage *message = nil;
@@ -113,9 +113,16 @@
 #endif
         // There are circumstances where self is already be deallocated at this point (and with it _eventHandler)
         
-        if(this->_eventHandler){
-            this.eventHandler(message, this);
-        }
+//        if(this->_eventHandler){
+//            this.eventHandler(message, this);
+//        }
+
+		// Since the commented lines above lead to frequent crashes due to a race condition when quitting
+		// we will go with this crash free version instead (which does lead to a retain cycle due to use of 
+		// self within the block). Since the app is about to quit anyway, though, it should be that bad...
+		
+		XPCEventHandler handler = self.eventHandler;
+         if(handler) handler(message,self);
     });
 }
 
