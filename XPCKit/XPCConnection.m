@@ -99,6 +99,7 @@
             xpc_object_t errorDict = xpc_dictionary_create(NULL, NULL, 0);
             xpc_dictionary_set_value(errorDict, "__XPCError", object);
             message = [XPCMessage messageWithXPCDictionary:errorDict];
+            xpc_release(errorDict);
         }else{
             message = [XPCMessage messageWithXPCDictionary:object];
             
