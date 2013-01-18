@@ -40,7 +40,7 @@
             errorCode = XPCTerminationImminent;
             [userInfo setValue:@"XPC service termination is imminent" forKey:NSLocalizedDescriptionKey];
         }
-        return [NSError errorWithDomain:@"XPCErrorDomain" code:errorCode userInfo:userInfo];
+        return [NSError errorWithDomain:kXPCKitErrorDomain code:errorCode userInfo:userInfo];
     }
     return nil;
 }

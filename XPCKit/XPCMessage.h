@@ -20,6 +20,8 @@
 #import <Foundation/Foundation.h>
 #import <xpc/xpc.h>
 
+#define kXPCKitErrorDomain @"com.joergjacobsen.xpckit"
+
 enum {
     XPCConnectionInterrupted = 1001,
     XPCConnectionInvalid = 1002,
