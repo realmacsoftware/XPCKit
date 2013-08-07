@@ -263,35 +263,35 @@
 - (NSArray *) arrayForKey:(NSString *)inKey
 {
     id object = [self objectForKey:inKey];
-    return (NSArray *) [object isKindOfClass:[NSArray class]] ? object : nil;
+    return (NSArray *) ([object isKindOfClass:[NSArray class]] ? object : nil);
 }
 
 
 - (NSDictionary *) dictionaryForKey:(NSString *)inKey
 {
     id object = [self objectForKey:inKey];
-    return (NSDictionary *) [object isKindOfClass:[NSDictionary class]] ? object : nil;
+    return (NSDictionary *) ([object isKindOfClass:[NSDictionary class]] ? object : nil);
 }
 
 
 - (NSString *) stringForKey:(NSString *)inKey
 {
     id object = [self objectForKey:inKey];
-    return (NSString *) [object isKindOfClass:[NSString class]] ? object : nil;
+    return (NSString *) ([object isKindOfClass:[NSString class]] ? object : nil);
 }
 
 
 - (NSURL *) URLForKey:(NSString *)inKey
 {
     id object = [self objectForKey:inKey];
-    return (NSURL *) [object isKindOfClass:[NSURL class]] ? object : nil;
+    return (NSURL *) ([object isKindOfClass:[NSURL class]] ? object : nil);
 }
 
 
 - (NSData *) dataForKey:(NSString *)inKey
 {
     id object = [self objectForKey:inKey];
-    return (NSData *) [object isKindOfClass:[NSData class]] ? object : nil;
+    return (NSData *) ([object isKindOfClass:[NSData class]] ? object : nil);
 }
 
 
