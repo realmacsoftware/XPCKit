@@ -34,7 +34,9 @@
 - (id)initWithServiceName:(NSString *)serviceName{
 	xpc_connection_t connection = xpc_connection_create([serviceName cStringUsingEncoding:NSUTF8StringEncoding], NULL);
 	self = [self initWithConnection:connection];
-	xpc_release(connection);
+    if (connection) {
+        xpc_release(connection);
+    }
 	return self;
 }
 
@@ -50,7 +52,9 @@
 
 		dispatch_queue_t queue = dispatch_queue_create(xpc_connection_get_name(_connection), 0);
 		self.dispatchQueue = queue;
-		dispatch_release(queue);
+        if (queue) {
+            dispatch_release(queue);
+        }
 		
 		[self resume];
 	}
