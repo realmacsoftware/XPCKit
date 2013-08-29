@@ -26,6 +26,7 @@
     XPCEventHandler _eventHandler;
     xpc_connection_t _connection;
 	dispatch_queue_t _dispatchQueue;
+	dispatch_queue_t _replyDispatchQueue;
 }
 
 - (id)initWithServiceName:(NSString *)serviceName;
@@ -36,6 +37,11 @@
 @property (nonatomic, readonly)   xpc_connection_t connection;
 @property (nonatomic, assign)     dispatch_queue_t dispatchQueue;
 
+/**
+ * Reply and error handler will be submitted to this queue
+ */
+@property (nonatomic, assign)     dispatch_queue_t replyDispatchQueue;
+
 // connection properties
 @property (nonatomic, readonly) NSString *connectionName;
 @property (nonatomic, readonly) NSNumber *connectionEUID;
@@ -45,10 +51,20 @@
 
 -(void)sendMessage:(XPCMessage *)message;
 
-// Sends a message to the associated connection in the XPC service and invokes the reply handler
-// on the dispatch queue of self once the associated connection sends a reply.
-// Logs an error message to the console if the connection does not reply for whatever reasons.
 
+/*!
+ * @abstract
+ * Sends a message to the associated connection in the XPC service and invokes the reply handler
+ * on the replyDispatchQueue of self once the associated connection sends a reply.
+ * Logs an error message to the console if the connection does not reply for whatever reasons.
+ *
+ * @discussion
+ * If replyDispatchQueue is nil then dispatch_get_current_queue() will be used for backward compatibility.
+ * Be aware that this behavior will be removed in a future release.
+ *
+ * @param replyHandler
+ * Reply handler to be queued on replyDispatchQueue of self after message was executed by XPC service
+ */
 -(void)sendMessage:(XPCMessage *)message withReply:(XPCReplyHandler)replyHandler;
 
 // Sends a message to the associated connection in the XPC service and invokes the reply handler
@@ -59,7 +75,7 @@
 
 // Sends a selector and a target and an optional object argument to the associated connection in the XPC service
 // which will invoke the selector on the (copied) target with the optional (copied) argument. Invokes the
-// return value handler on the dispatch queue of self with the (copied) return value and possibly
+// return value handler on the reply dispatch queue of self with the (copied) return value and possibly
 // a (copied) error object supplied.
 
 -(void)sendSelector:(SEL)inSelector withTarget:(id)inTarget object:(id)inObject returnValueHandler:(XPCReturnValueHandler)inReturnHandler;

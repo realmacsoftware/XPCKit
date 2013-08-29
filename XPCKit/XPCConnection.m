@@ -29,7 +29,7 @@
 
 @implementation XPCConnection
 
-@synthesize eventHandler=_eventHandler, dispatchQueue=_dispatchQueue, connection=_connection;
+@synthesize eventHandler=_eventHandler, dispatchQueue=_dispatchQueue, replyDispatchQueue=_replyDispatchQueue, connection=_connection;
 
 - (id)initWithServiceName:(NSString *)serviceName{
 	xpc_connection_t connection = xpc_connection_create([serviceName cStringUsingEncoding:NSUTF8StringEncoding], NULL);
@@ -86,6 +86,17 @@
 	_dispatchQueue = dispatchQueue;
 	
 	xpc_connection_set_target_queue(self.connection, self.dispatchQueue);
+}
+
+-(void)setReplyDispatchQueue:(dispatch_queue_t)dispatchQueue{
+	if(dispatchQueue){
+		dispatch_retain(dispatchQueue);
+	}
+	
+	if(_replyDispatchQueue){
+		dispatch_release(_replyDispatchQueue);
+	}
+	_replyDispatchQueue = dispatchQueue;
 }
 
 -(void)receiveConnection:(xpc_connection_t)connection
@@ -172,14 +183,14 @@
         // Need to tell message that we want a direct reply
         [inMessage setNeedsDirectReply:YES];
         
-        dispatch_queue_t currentQueue = dispatch_get_current_queue();
-        dispatch_retain(currentQueue);
+        dispatch_queue_t replyQueue = self.replyDispatchQueue ? self.replyDispatchQueue : dispatch_get_current_queue();
+        dispatch_retain(replyQueue);
         
 		XPCReplyHandler replyHandler = [inReplyHandler copy];
 		XPCErrorHandler errorHandler = [inErrorHandler copy];
 		
         dispatch_async(self.dispatchQueue, ^{
-            xpc_connection_send_message_with_reply(_connection, inMessage.XPCDictionary, currentQueue, ^(xpc_object_t event){
+            xpc_connection_send_message_with_reply(_connection, inMessage.XPCDictionary, replyQueue, ^(xpc_object_t event){
                 xpc_type_t type = xpc_get_type(event);
                 
                 if (type == XPC_TYPE_ERROR)
@@ -207,7 +218,7 @@
 				
 				[replyHandler release];
 				[errorHandler release];
-                dispatch_release(currentQueue);
+                dispatch_release(replyQueue);
             });
         });
     }
