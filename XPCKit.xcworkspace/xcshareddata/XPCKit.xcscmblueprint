@@ -1,0 +1,37 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "DF06672632C0BED058BAD8C801C3A7EE49EFB8CB",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "700820FB93A98B7318FD7AE60194A382B0B557A9" : 9223372036854775807,
+    "A42BD074AA6C6C6A1D515196ACAA99E1EF34780E" : 9223372036854775807,
+    "DF06672632C0BED058BAD8C801C3A7EE49EFB8CB" : 9223372036854775807
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "54CB5245-A89F-4DEB-87B1-4AE4EC8A90FB",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "700820FB93A98B7318FD7AE60194A382B0B557A9" : "",
+    "A42BD074AA6C6C6A1D515196ACAA99E1EF34780E" : "..\/..\/..",
+    "DF06672632C0BED058BAD8C801C3A7EE49EFB8CB" : "XPCKit\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "XPCKit",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "XPCKit.xcworkspace",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "git:\/\/github.com\/iMediaSandboxing\/iMedia.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "700820FB93A98B7318FD7AE60194A382B0B557A9"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:ifolor\/ifolor-Photo-Services.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "A42BD074AA6C6C6A1D515196ACAA99E1EF34780E"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "git:\/\/github.com\/iMediaSandboxing\/XPCKit.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "DF06672632C0BED058BAD8C801C3A7EE49EFB8CB"
+    }
+  ]
+}
